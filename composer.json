@@ -1,0 +1,9 @@
+{
+"name": "paulmillband/cached-image-resizer",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "paulmillband\\cached-image-resizer\\": "src/"
+        }
+    }
+}
