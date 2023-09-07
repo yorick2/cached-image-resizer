@@ -1,9 +1,22 @@
 {
-"name": "paulmillband/cached-image-resizer",
+    "name": "paulmillband/cached-image-resizer",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "paulmillband\\cached-image-resizer\\": "src/"
+            "paulmillband\\cachedImageResizer\\": "src/"
         }
-    }
+    },
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
