@@ -48,4 +48,19 @@ class ImageResizerTest extends TestCase
 
     }
 
+    public function test_canSwitchImageFileFormats()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function test_canCropImage()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function test_canReturnAnImageInAGivenAspectRatio()
+    {
+        $this->assertTrue(false);
+    }
+
 }
