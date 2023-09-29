@@ -1,20 +1,38 @@
 {
     "name": "paulmillband/cached-image-resizer",
+    "description": "An automated way to resize images on demand, for frontend use. Primarily for use in Laravel vue.",
+    "license": "MIT",
+    "keywords": ["laravel8", "module", "image", "resize"],
     "type": "library",
+    "authors": [
+        {
+            "name": "Paul Millband",
+            "homepage": "https://github.com/yorick2",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "paulmillband\\cachedImageResizer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "paulmillband\\cachedImageResizer\\Tests\\": "tests/"
         }
     },
     "require": {
         "php": "^7.3|^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "orchestra/testbench": "^6.0"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
+    "extra": {
+        "laravel": {
+            "providers": [
+                "paulmillband\\cachedImageResizer\\ImageResizerPackageServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",
