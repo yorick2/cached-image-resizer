@@ -1,3 +1,30 @@
+![Under Construction][ico-under-construction]
+
+[![License][ico-license]](LICENSE.md)
+![Release][ico-in-development]
+![Release][ico-release]
+![Release][ico-tag]
+![Download Size][ico-download-size]
+![Last Commit][ico-last-commit]
+
+![Github Top Language][ico-top-language]
+![Vue version][ico-vue-version]
+![PHP version][ico-php-version]
+
+[ico-under-construction]: https://img.shields.io/badge/UNDER%20CONSTRUCTION!-red?style=for-the-badge
+
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge
+[ico-in-development]: https://img.shields.io/badge/Release-Development-yellow?style=for-the-badge
+[ico-release]: https://img.shields.io/github/v/release/yorick2/cached-image-resizer?style=for-the-badge
+[ico-tag]: https://img.shields.io/github/v/tag/yorick2/cached-image-resizer?style=for-the-badge
+[ico-download-size]: https://img.shields.io/github/languages/code-size/yorick2/cached-image-resizer?style=for-the-badge
+[ico-last-commit]: https://img.shields.io/github/last-commit/yorick2/cached-image-resizer?style=for-the-badge
+
+[ico-top-language]: https://img.shields.io/github/languages/top/yorick2/cached-image-resizer?style=for-the-badge
+[ico-vue-version]: https://img.shields.io/badge/Vue-2-brightgreen?style=for-the-badge&logo=vue.js
+[ico-php-version]: https://img.shields.io/badge/PHP-8.1-brightgreen?style=for-the-badge&logo=php
+
+
 # cached-image-resizer
 Provide one image, then the multiple images of the given sizes are created and cached. Then placed in our picture element component providing the best image for the end users device. 
 
@@ -41,3 +68,7 @@ Adding the component to another component.
 ```vue
 <ImageResizer></ImageResizer>
 ```
+
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[link-author]: https://github.com/yorick2
+[link-contributors]: ../../contributors
