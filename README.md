@@ -27,7 +27,10 @@
 # cached-image-resizer
 Provide one image, then the multiple images of the given sizes are created and cached. Then placed in our picture element component providing the best image for the end users device. 
 
-# installation
+# PHP packages needed
+Imagick
+
+# Installation
 To tell laravel about the PMImageResizer component we have a few options. 
  
 ## Option 1: 

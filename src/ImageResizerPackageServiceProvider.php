@@ -14,10 +14,15 @@ class ImageResizerPackageServiceProvider extends ServiceProvider
     {
         $this->publishes(
             [
-                __DIR__ . '/../resources/js/Components/PMImageResizer' =>
-                    resource_path('resources/js/Components/imageResizer')
+                __DIR__ . '/resources/js/Components/Picture.vue' =>
+                    resource_path('resources/js/Components/Picture.vue')
             ],
             'vue-components');
-        //
+        $this->publishes(
+            [
+                __DIR__ . '/app/Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php' =>
+                    app_path('Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php')
+            ]);
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
     }
 }
