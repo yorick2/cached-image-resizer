@@ -17,6 +17,7 @@ class ResizerController extends Controller
 
     public function resizeToWidth(Request $request, $width, $imgPath)
     {
+        return response()->setContent('booo');
         $cacheFolder = $this->resizedCacheFolder.'/width/'.$width;
         $newPath = ImageResizer::resizeIfNeeded(
             $imgPath,
@@ -28,6 +29,7 @@ class ResizerController extends Controller
 
     public function resizeToHeight(Request $request, $height, $imgPath)
     {
+        xdebug_enable();
         $cacheFolder = $this->resizedCacheFolder.'/height/'.$height;
         $newPath = ImageResizer::resizeIfNeeded(
             $imgPath,

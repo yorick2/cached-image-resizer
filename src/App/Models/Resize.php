@@ -6,12 +6,14 @@ use Imagick;
 class Resize
 {
     /**
+     * @param string $imageFilePath
+     * @param string $resizedFilePath
      * @param int $width set to 0 to automaticall calculate
      * @param int $height set to 0 to automaticall calculate
      * @param $filterType
-     * @param $blur The blur factor where > 1 is blurry, < 1 is sharp
-     * @param $bestFit
-     * @param $cropZoom
+     * @param float $blur The blur factor where > 1 is blurry, < 1 is sharp
+     * @param boolean$bestFit
+     * @throws [\ImagickException]
      * creates a resized copy of an image
      */
     static function resize(
@@ -36,23 +38,23 @@ class Resize
     }
 
     /**
-     * @param Imagick $imagick
+     * @param Imagick $imagickImage
      * @param $resizedWidth
      * @return float
      */
-    static function getResizedHeight(Imagick $imagick, $resizedWidth){
-        $ratio = $resizedWidth / $imagick->getImageWidth();
-        return ceil($ratio * $imagick->getImageHeight());
+    static function getResizedHeight(Imagick $imagickImage, $resizedWidth){
+        $ratio = $resizedWidth / $imagickImage->getImageWidth();
+        return ceil($ratio * $imagickImage->getImageHeight());
     }
 
     /**
-     * @param Imagick $imagick
+     * @param Imagick $imagickImage
      * @param $resizedHeight
      * @return float
      */
-    static function getResizedWidth(Imagick $imagick, $resizedHeight){
-        $ratio = $resizedHeight / $imagick->getImageHeight();
-        return ceil($ratio * $imagick->getImageWidth());
+    static function getResizedWidth(Imagick $imagickImage, $resizedHeight){
+        $ratio = $resizedHeight / $imagickImage->getImageHeight();
+        return ceil($ratio * $imagickImage->getImageWidth());
     }
 
 }

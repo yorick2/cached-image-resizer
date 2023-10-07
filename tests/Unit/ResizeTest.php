@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use paulmillband\cachedImageResizer\App\Models\Resize;
 use PhpParser\Node\Scalar\MagicConst\Dir;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use Imagick;
 
 class ResizeTest extends TestCase

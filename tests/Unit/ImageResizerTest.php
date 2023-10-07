@@ -2,8 +2,9 @@
 
 namespace Tests\Unit;
 
+use paulmillband\cachedImageResizer\App\Models\Helper\ImageCacheFolderPath;
 use paulmillband\cachedImageResizer\App\Models\ImageResizer;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use Imagick;
 
 class ImageResizerTest extends TestCase
@@ -18,17 +19,36 @@ class ImageResizerTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function test_canResizeImage()
+    public function test_canResizeJpgImage()
     {
-        $_SERVER['HTTPS'] = 'on';
-        $_SERVER['HTTP_HOST'] = 'dev.laravel';
-        $_SERVER['DOCUMENT_ROOT'] = realpath(__DIR__.'/../../');
+        $cacheFolder = __DIR__.'/../../testImages/cache';
+        if(file_exists($cacheFolder.'/*')){
+            unlink($cacheFolder.'/*');
+        }
         $this->imageResizer::resizeIfNeeded(
-            self::IMAGE_LOCATION_JPG,
-            realpath(__DIR__.'/../../testImages/cache'),
+            realpath(self::IMAGE_LOCATION_JPG),
+            realpath($cacheFolder),
             300
         );
         $imageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.basename(self::IMAGE_LOCATION_JPG);
+        $imagick = new Imagick($imageFilePath);
+        $this->assertEquals($imagick->getImageWidth(), 300);
+        $this->assertEquals($imagick->getImageHeight(), 200);
+        $imagick->destroy();
+    }
+
+    public function test_canResizePngImage()
+    {
+        $cacheFolder = __DIR__.'/../../testImages/cache';
+        if(file_exists($cacheFolder.'/*')){
+            unlink($cacheFolder.'/*');
+        }
+        $this->imageResizer::resizeIfNeeded(
+            realpath(self::IMAGE_LOCATION_PNG),
+            realpath($cacheFolder),
+            300
+        );
+        $imageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.basename(self::IMAGE_LOCATION_PNG);
         $imagick = new Imagick($imageFilePath);
         $this->assertEquals($imagick->getImageWidth(), 300);
         $this->assertEquals($imagick->getImageHeight(), 200);

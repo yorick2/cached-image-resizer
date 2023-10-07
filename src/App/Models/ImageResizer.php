@@ -10,7 +10,7 @@ class ImageResizer
 {
     /**
      * @param string $imageFilePath
-     * @param string $resizedCacheFolderPath
+     * @param string $cacheFolder
      * @param int $width set to 0 to automaticall calculate
      * @param int $height set to 0 to automaticall calculate
      * @param int $filterType
@@ -21,17 +21,17 @@ class ImageResizer
      */
     static function resizeIfNeeded(
         string $imageFilePath,
-        string $resizedCacheFolderPath,
+        string $cacheFolder,
         int $width,
         int $height = 0,
         int $filterType = Imagick::FILTER_CATROM,
         float $blur = 1,
         bool $bestFit = false
     ) {
-        if(!is_dir($resizedCacheFolderPath)){
-            mkdir($resizedCacheFolderPath, 0775, true);
+        if(!is_dir($cacheFolder)){
+            mkdir($cacheFolder, 0775, true);
         }
-        $newPath = $resizedCacheFolderPath.'/'.$imageFilePath;
+        $newPath = $cacheFolder.basename($imageFilePath);
         if(!file_exists($newPath)){
             Resize::resize(
                 $imageFilePath,

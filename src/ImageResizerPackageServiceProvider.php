@@ -20,7 +20,7 @@ class ImageResizerPackageServiceProvider extends ServiceProvider
             'vue-components');
         $this->publishes(
             [
-                __DIR__ . '/app/Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php' =>
+                __DIR__ . '/App/Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php' =>
                     app_path('Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php')
             ]);
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
