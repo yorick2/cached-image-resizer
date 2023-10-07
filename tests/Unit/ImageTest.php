@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use paulmillband\cachedImageResizer\Image;
+use paulmillband\cachedImageResizer\App\Models\Image;
 use PhpParser\Node\Scalar\MagicConst\Dir;
 use PHPUnit\Framework\TestCase;
 

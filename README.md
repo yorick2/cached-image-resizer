@@ -70,3 +70,7 @@ Adding the component to another component.
 ```vue
 <ImageResizer></ImageResizer>
 ```
+
+# Options
+## .env
+|'image_cache_folder' | cache folder path ( relative to the public path)|

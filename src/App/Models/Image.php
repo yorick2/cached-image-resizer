@@ -1,7 +1,7 @@
 <?php
 
 
-namespace paulmillband\cachedImageResizer;
+namespace paulmillband\cachedImageResizer\App\Models;
 
 use function PHPUnit\Framework\throwException;
 
