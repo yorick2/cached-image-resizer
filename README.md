@@ -74,3 +74,8 @@ Adding the component to another component.
 # Options
 ## .env
 |'image_cache_folder' | cache folder path ( relative to the public path)|
+
+# Testing
+# Setup
+composer install
+vendor/bin/testbench serve

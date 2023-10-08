@@ -2,7 +2,7 @@
 
 namespace paulmillband\cachedImageResizer\App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use paulmillband\cachedImageResizer\App\Models\Helper\ImageCacheFolderPath;
 use paulmillband\cachedImageResizer\App\Models\ImageResizer;
 
@@ -17,10 +17,9 @@ class ResizerController extends Controller
 
     public function resizeToWidth(Request $request, $width, $imgPath)
     {
-        return response()->setContent('booo');
-        $cacheFolder = $this->resizedCacheFolder.'/width/'.$width;
+        $cacheFolder = $this->resizedCacheFolder.'/width/'.$width.'/'.dirname($imgPath);
         $newPath = ImageResizer::resizeIfNeeded(
-            $imgPath,
+            public_path('images/'.$imgPath),
             $cacheFolder,
             $width
         );
@@ -29,10 +28,9 @@ class ResizerController extends Controller
 
     public function resizeToHeight(Request $request, $height, $imgPath)
     {
-        xdebug_enable();
-        $cacheFolder = $this->resizedCacheFolder.'/height/'.$height;
+        $cacheFolder = $this->resizedCacheFolder.'/height/'.$height.'/'.dirname($imgPath);
         $newPath = ImageResizer::resizeIfNeeded(
-            $imgPath,
+            public_path('images/'.$imgPath),
             $cacheFolder,
             0,
             $height

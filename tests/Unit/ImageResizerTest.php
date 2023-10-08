@@ -11,7 +11,30 @@ class ImageResizerTest extends TestCase
 {
     const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
     const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    private $cacheFolderPath = __DIR__.'/../../testImages/cache';
     private $imageResizer;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $files = glob($this->cacheFolderPath.'/*'); // get all file names
+        foreach($files as $file){
+            if(is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $files = glob($this->cacheFolderPath.'/*'); // get all file names
+        foreach($files as $file){
+            if(is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
     {
@@ -21,16 +44,12 @@ class ImageResizerTest extends TestCase
 
     public function test_canResizeJpgImage()
     {
-        $cacheFolder = __DIR__.'/../../testImages/cache';
-        if(file_exists($cacheFolder.'/*')){
-            unlink($cacheFolder.'/*');
-        }
         $this->imageResizer::resizeIfNeeded(
             realpath(self::IMAGE_LOCATION_JPG),
-            realpath($cacheFolder),
+            realpath($this->cacheFolderPath),
             300
         );
-        $imageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.basename(self::IMAGE_LOCATION_JPG);
+        $imageFilePath = realpath($this->cacheFolderPath).'/'.basename(self::IMAGE_LOCATION_JPG);
         $imagick = new Imagick($imageFilePath);
         $this->assertEquals($imagick->getImageWidth(), 300);
         $this->assertEquals($imagick->getImageHeight(), 200);
@@ -39,13 +58,9 @@ class ImageResizerTest extends TestCase
 
     public function test_canResizePngImage()
     {
-        $cacheFolder = __DIR__.'/../../testImages/cache';
-        if(file_exists($cacheFolder.'/*')){
-            unlink($cacheFolder.'/*');
-        }
         $this->imageResizer::resizeIfNeeded(
             realpath(self::IMAGE_LOCATION_PNG),
-            realpath($cacheFolder),
+            realpath($this->cacheFolderPath),
             300
         );
         $imageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.basename(self::IMAGE_LOCATION_PNG);

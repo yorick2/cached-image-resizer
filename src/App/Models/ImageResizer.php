@@ -31,9 +31,9 @@ class ImageResizer
         if(!is_dir($cacheFolder)){
             mkdir($cacheFolder, 0775, true);
         }
-        $newPath = $cacheFolder.basename($imageFilePath);
+        $newPath = $cacheFolder.'/'.basename($imageFilePath);
         if(!file_exists($newPath)){
-            Resize::resize(
+            $success = Resize::resize(
                 $imageFilePath,
                 $newPath,
                 $width,
@@ -42,6 +42,9 @@ class ImageResizer
                 $blur,
                 $bestFit
             );
+            if($success === false){
+                return false;
+            }
         }
 //        return (new Image($newPath))->getUrl();
         return $newPath;

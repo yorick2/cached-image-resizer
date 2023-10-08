@@ -12,8 +12,9 @@ class Resize
      * @param int $height set to 0 to automaticall calculate
      * @param $filterType
      * @param float $blur The blur factor where > 1 is blurry, < 1 is sharp
-     * @param boolean$bestFit
-     * @throws [\ImagickException]
+     * @param bool $bestFit
+     * @return bool
+     * @throws \ImagickException
      * creates a resized copy of an image
      */
     static function resize(
@@ -25,7 +26,11 @@ class Resize
         float $blur = 1,
         bool $bestFit = false
     ) {
-        $imagick = new Imagick(realpath($imageFilePath));
+        $file = realpath($imageFilePath);
+        if($file===false){
+            return false;
+        }
+        $imagick = new Imagick($file);
         if($height == 0){
             $height = self::getResizedHeight($imagick, $width);
         }
@@ -35,6 +40,7 @@ class Resize
         $imagick->resizeImage($width, $height, $filterType, $blur, $bestFit);
         $imagick->writeImage($resizedFilePath);
         $imagick->destroy();
+        return true;
     }
 
     /**
