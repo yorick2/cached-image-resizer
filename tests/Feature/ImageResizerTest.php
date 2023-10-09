@@ -9,8 +9,8 @@ use Imagick;
 
 class ImageResizerTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
+    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
     private $imageResizer;
     private string $cacheFolderPath;
     private string $jpgImageSubPath;
@@ -82,7 +82,7 @@ class ImageResizerTest extends TestCase
     }
 
     /** @test */
-    public function visit_test_route()
+    public function test_canVisitTestRoute()
     {
         $response = $this->call('GET', '/');
         $response->assertStatus(200);
@@ -92,7 +92,7 @@ class ImageResizerTest extends TestCase
     public function test_canResizeJpgImageByWidth()
     {
         $resizedImageURL = URL::to('/pm-image-resizer/w/100'.$this->jpgImageSubPath);
-         $response = $this->get($resizedImageURL);
+        $response = $this->get($resizedImageURL);
         $response->assertStatus( 200);
         $cachedImagePath = $this->cacheFolderPath.'/width/100/'.$this->jpgImageSubPath;
         $this->assertFileExists($cachedImagePath);

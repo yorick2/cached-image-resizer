@@ -15,23 +15,23 @@ class ResizerController extends Controller
         $this->resizedCacheFolder = ImageCacheFolderPath::getImageCacheFolderPath();
     }
 
-    public function resizeToWidth(Request $request, $width, $imgPath)
+    public function resizeToWidth(Request $request, int $width, string $imgPath)
     {
-        $cacheFolder = $this->resizedCacheFolder.'/width/'.$width.'/'.dirname($imgPath);
-        $newPath = ImageResizer::resizeIfNeeded(
+        $newPath = $this->resizedCacheFolder.'/width/'.$width.'/'.$imgPath;
+        ImageResizer::resizeIfNeeded(
             public_path('images/'.$imgPath),
-            $cacheFolder,
+            $newPath,
             $width
         );
         return response()->file($newPath);
     }
 
-    public function resizeToHeight(Request $request, $height, $imgPath)
+    public function resizeToHeight(Request $request, int $height, string $imgPath)
     {
-        $cacheFolder = $this->resizedCacheFolder.'/height/'.$height.'/'.dirname($imgPath);
-        $newPath = ImageResizer::resizeIfNeeded(
+        $newPath = $this->resizedCacheFolder.'/height/'.$height.'/'.$imgPath;
+        ImageResizer::resizeIfNeeded(
             public_path('images/'.$imgPath),
-            $cacheFolder,
+            $newPath,
             0,
             $height
         );

@@ -3,7 +3,7 @@ namespace paulmillband\cachedImageResizer\App\Models;
 
 use Imagick;
 
-class ImageResizer
+class ImageCropper
 {
     /**
      * @param string $imageFilePath
@@ -17,7 +17,7 @@ class ImageResizer
      * @throws \ImagickException
      * creates a resized copy of an image into a folder named as the width value, inside the cache folder given
      */
-    static function resizeIfNeeded(
+    static function cropIfNeeded(
         string $imageFilePath,
         string $newPath,
         int $width,

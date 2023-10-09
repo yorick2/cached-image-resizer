@@ -3,8 +3,6 @@
 
 namespace paulmillband\cachedImageResizer\App\Models;
 
-use function PHPUnit\Framework\throwException;
-
 class Image
 {
     protected string $filePath;
@@ -14,17 +12,22 @@ class Image
             'url'
     ];
 
-    public function __construct($filePath)
+    /**
+     * Image constructor.
+     * @param string $filePath
+     * @throws \Exception
+     */
+    public function __construct(string $filePath)
     {
             $this->setFilePath($filePath);
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      * @throws \Exception
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         if (!in_array($name,$this->accessibleProtectedVariables)){
             throw new \Exception("access to variable '${name}' denied");
@@ -38,11 +41,11 @@ class Image
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      * @throws \Exception
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if (!in_array($name,$this->accessibleProtectedVariables)){
             throw new \Exception("access to variable '${name}' denied");
@@ -55,9 +58,10 @@ class Image
     }
 
     /**
-     * @param string $location
+     * @param string $imageFilePath
+     * @throws \Exception
      */
-    public function setFilePath($imageFilePath)
+    public function setFilePath(string $imageFilePath)
     {
         if(!file_exists($imageFilePath)){
             throw new \Exception('file not found');

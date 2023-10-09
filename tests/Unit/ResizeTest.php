@@ -9,8 +9,9 @@ use Imagick;
 
 class ResizeTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
+    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
+    const IMAGE_LOCATION_WEBP = __DIR__.'/../../testImages/laptop-400X266.webp';
     private $cacheFolderPath = __DIR__.'/../../testImages/cache';
     private $imageClass;
 
@@ -42,14 +43,32 @@ class ResizeTest extends TestCase
         }
     }
 
-    public function test_canResizeImage()
+    protected function canResize(string $filePath, string $format, int $width, int $height)
     {
-        $this->imageClass::resize( self::IMAGE_LOCATION_JPG, __DIR__.'/../../testImages/cache/'.basename(self::IMAGE_LOCATION_JPG), 300);
-        $imageFilePath = realpath($this->cacheFolderPath).'/'.basename(self::IMAGE_LOCATION_JPG);
+        $this->imageClass::resize( $filePath, __DIR__.'/../../testImages/cache/'.basename($filePath), $width);
+        $imageFilePath = realpath($this->cacheFolderPath).'/'.basename($filePath);
         $imagick = new Imagick($imageFilePath);
-        $this->assertEquals($imagick->getImageWidth(), 300);
-        $this->assertEquals($imagick->getImageHeight(), 200);
+        $this->assertEquals($imagick->getImageWidth(), $width);
+        $this->assertEquals($imagick->getImageHeight(), $height);
+        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
+        $imagick->clear();
         $imagick->destroy();
+    }
+
+    public function test_canResizeJpgImage()
+    {
+        $this->canResize(self::IMAGE_LOCATION_JPG, 'JPEG', 300, 200);
+    }
+
+    public function test_canResizePngImage()
+    {
+        $this->canResize(self::IMAGE_LOCATION_PNG, 'PNG', 300, 200);
+    }
+
+    public function test_canResizeWebpImage()
+    {
+        $this->canResize(self::IMAGE_LOCATION_WEBP, 'WEBP', 300, 200);
+
     }
 
 }

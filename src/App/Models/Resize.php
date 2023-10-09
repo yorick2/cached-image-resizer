@@ -39,26 +39,27 @@ class Resize
         }
         $imagick->resizeImage($width, $height, $filterType, $blur, $bestFit);
         $imagick->writeImage($resizedFilePath);
+        $imagick->clear();
         $imagick->destroy();
         return true;
     }
 
     /**
      * @param Imagick $imagickImage
-     * @param $resizedWidth
+     * @param int $resizedWidth
      * @return float
      */
-    static function getResizedHeight(Imagick $imagickImage, $resizedWidth){
+    static function getResizedHeight(Imagick $imagickImage, int $resizedWidth){
         $ratio = $resizedWidth / $imagickImage->getImageWidth();
         return ceil($ratio * $imagickImage->getImageHeight());
     }
 
     /**
      * @param Imagick $imagickImage
-     * @param $resizedHeight
+     * @param int $resizedHeight
      * @return float
      */
-    static function getResizedWidth(Imagick $imagickImage, $resizedHeight){
+    static function getResizedWidth(Imagick $imagickImage, int $resizedHeight){
         $ratio = $resizedHeight / $imagickImage->getImageHeight();
         return ceil($ratio * $imagickImage->getImageWidth());
     }

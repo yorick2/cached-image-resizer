@@ -79,3 +79,4 @@ Adding the component to another component.
 # Setup
 composer install
 vendor/bin/testbench serve
+vendor/bin/phpunit 
