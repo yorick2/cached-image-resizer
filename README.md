@@ -7,6 +7,8 @@
 ![Download Size][ico-download-size]
 ![Last Commit][ico-last-commit]
 
+![UNIT TESTS][ico-unit-tests]
+
 ![Github Top Language][ico-top-language]
 ![Vue version][ico-vue-version]
 ![PHP version][ico-php-version]
@@ -19,6 +21,8 @@
 [ico-tag]: https://img.shields.io/github/v/tag/yorick2/cached-image-resizer?style=for-the-badge
 [ico-download-size]: https://img.shields.io/github/languages/code-size/yorick2/cached-image-resizer?style=for-the-badge
 [ico-last-commit]: https://img.shields.io/github/last-commit/yorick2/cached-image-resizer?style=for-the-badge
+
+[ico-unit-tests]: https://github.com/yorick2/cached-image-resizer/actions/workflows/UnitTests.yml/badge.svg
 
 [ico-top-language]: https://img.shields.io/github/languages/top/yorick2/cached-image-resizer?style=for-the-badge
 [ico-vue-version]: https://img.shields.io/badge/Vue-2-brightgreen?style=for-the-badge&logo=vue.js
