@@ -1,0 +1,2 @@
+providers:
+  - paulmillband\cachedImageResizer\ImageResizerPackageServiceProvider
