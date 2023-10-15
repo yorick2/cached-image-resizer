@@ -9,6 +9,7 @@
 
 ![Github Top Language][ico-top-language]
 
+![Laravel version][ico-laravel-version]
 ![Vue version][ico-vue-version]
 ![PHP version][ico-php-version]
 ![PHPUNIT version][ico-phpunit-version]
