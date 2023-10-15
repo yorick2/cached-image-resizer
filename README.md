@@ -11,6 +11,8 @@
 
 ![Vue version][ico-vue-version]
 ![PHP version][ico-php-version]
+![PHPUNIT version][ico-phpunit-version]
+![COMPOSER version][ico-composer-version]
 ![HTML version][ico-html-version]
 ![CSS version][ico-css-version]
 ![Javascript][ico-js-version]
@@ -28,6 +30,8 @@
 [ico-laravel-version]: https://img.shields.io/badge/laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [ico-vue-version]: https://img.shields.io/badge/Vue%202-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white
 [ico-php-version]: https://img.shields.io/badge/PHP%208.1-777BB4?style=for-the-badge&logo=php&logoColor=white
+[ico-phpunit-version]: https://img.shields.io/badge/PHPUnit-777BB4?style=for-the-badge&logoColor=white
+[ico-composer-version]: https://img.shields.io/badge/composer-885630?style=for-the-badge&logo=composer&logoColor=white
 [ico-html-version]: https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white
 [ico-css-version]: https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
 [ico-js-version]: https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white
