@@ -1,10 +1,10 @@
-name: Laravel
+name: Unit tests
 
 on:
   push:
-    branches: [ "wip" ]
+    branches: [ "master","develop","wip" ]
   pull_request:
-    branches: [ "wip" ]
+    branches: [ "master","develop","wip" ]
 
 jobs:
   laravel-tests:
