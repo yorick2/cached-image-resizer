@@ -76,7 +76,7 @@ Adding the component to another component.
 |'image_cache_folder' | cache folder path ( relative to the public path)|
 
 # Testing
-# Setup
+## Setup
 composer install
 vendor/bin/testbench serve
 vendor/bin/phpunit 
