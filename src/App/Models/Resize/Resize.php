@@ -1,5 +1,5 @@
 <?php
-namespace paulmillband\cachedImageResizer\App\Models;
+namespace paulmillband\cachedImageResizer\App\Models\Resize;
 
 use Imagick;
 

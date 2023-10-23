@@ -3,82 +3,34 @@
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\URL;
-use paulmillband\cachedImageResizer\App\Models\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Resize\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Resize\ResizeCache;
+use Tests\ImageTestImageLocations;
 use Tests\TestCase;
 use Imagick;
 
 class ImageResizerTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
-    private $imageResizer;
-    private string $cacheFolderPath;
-    private string $jpgImageSubPath;
-    private string $jpgImagePath;
-    private string $jpgImgFolderPath;
-    private string $pngImageSubPath;
-    private string $pngImagePath;
-    private string $pngImgFolderPath;
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
 
-    public function __construct(string $name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
+    private $imageResizer;
+    private $resizeCacheClass;
+    private string $cacheFolderPath;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->resizeCacheClass = new ResizeCache();
         $this->imageResizer = ImageResizer::class;
-
-        $this->cacheFolderPath = public_path('images/cache/');
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-
-        $this->jpgImageSubPath = '/test/'.basename(self::IMAGE_LOCATION_JPG);
-        $this->jpgImagePath = public_path('images'.$this->jpgImageSubPath);
-        $this->jpgImgFolderPath = dirname($this->jpgImagePath);
-        if(!is_dir($this->jpgImgFolderPath)){
-            mkdir($this->jpgImgFolderPath, 0775, true);
-        }
-        $copySuccess = copy(
-            self::IMAGE_LOCATION_JPG,
-            $this->jpgImagePath
+        if(!$this->setClassVariables("/Resize([A-Za-z]*)Image/")){
+            return;
+        };
+        $this->setUpImages(
+            $this->{$this->imageFileType.'ModuleImagePath'},
+            $this->laravelImageFolder.'/'.$this->{$this->imageFileType.'ImageSubPath'}
         );
-        $this->assertTrue($copySuccess, 'Test image could not be copied into place to prepare for test');
-
-        $this->pngImageSubPath = '/test/'.basename(self::IMAGE_LOCATION_PNG);
-        $this->pngImagePath = public_path('images'.$this->pngImageSubPath);
-        $this->pngImgFolderPath = dirname($this->pngImagePath);
-        if(!is_dir($this->pngImgFolderPath)){
-            mkdir($this->pngImgFolderPath, 0775, true);
-        }
-        $copySuccess = copy(
-            self::IMAGE_LOCATION_PNG,
-            $this->pngImagePath
-        );
-        $this->assertTrue($copySuccess, 'Test image could not be copied into place to prepare for test');
-
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-        if(file_exists($this->jpgImagePath)){
-            unlink($this->jpgImagePath);
-        }
-        if(file_exists($this->pngImagePath)){
-            unlink($this->pngImagePath);
-        }
     }
 
     /** @test */
@@ -89,55 +41,51 @@ class ImageResizerTest extends TestCase
         $response->assertSee('testing page loaded');
     }
 
-    public function test_canResizeJpgImageByWidth()
+    /**
+     * @param int $width
+     * @param int $height
+     * @param string $imagePath
+     * @param int $imageConstant
+     * @param string $filetype
+     */
+    protected function canResize(int $width, int $height, string $imagePath, int $imageConstant, string $filetype)
     {
-        $resizedImageURL = URL::to('/pm-image-resizer/w/100'.$this->jpgImageSubPath);
+        $imagePath = '/'.ltrim($imagePath, '/');
+        $cachedImagePath = $this->resizeCacheClass->newFilePath($width, $height, $imagePath);
+        $this->assertFileDoesNotExist($cachedImagePath);
+        $resizedImageURL = URL::to('/pm-image-resizer/w/'.$width.'/h/'.$height.$imagePath);
         $response = $this->get($resizedImageURL);
         $response->assertStatus( 200);
-        $cachedImagePath = $this->cacheFolderPath.'/width/100/'.$this->jpgImageSubPath;
         $this->assertFileExists($cachedImagePath);
         $imageSize = getimagesize($cachedImagePath);
-        $this->assertTrue(($imageSize[0] == 100), 'cached image not required width');
-        $this->assertTrue(($imageSize[1] > 1), 'cached image not required height');
-        $this->assertTrue($imageSize[2] === IMAGETYPE_JPEG, 'cached image isn\'t a jpg');
+        if($width){
+            $this->assertTrue(($imageSize[0] == 100), 'cached image not required width');
+        }else{
+            $this->assertTrue(($imageSize[0] > 1 ), 'cached image not required width');
+        }
+        if ($height){
+            $this->assertTrue($imageSize[2] === $imageConstant, 'cached image isn\'t a '.$filetype);
+        }else{
+            $this->assertTrue($imageSize[2] > 1, 'cached image isn\'t a '.$filetype);
+        }
+    }
+
+    public function test_canResizeJpgImageByWidth()
+    {
+        $this->canResize( 100,  0,  $this->jpgImageSubPath,  IMAGETYPE_JPEG,  'jpg');
     }
 
     public function test_canResizeJpgImageByHeight()
     {
-        $resizedImageURL = URL::to('/pm-image-resizer/h/100'.$this->jpgImageSubPath);
-        $response = $this->get($resizedImageURL);
-        $response->assertStatus( 200);
-        $cachedImagePath = $this->cacheFolderPath.'/height/100/'.$this->jpgImageSubPath;
-        $this->assertFileExists($cachedImagePath);
-        $imageSize = getimagesize($cachedImagePath);
-        $this->assertTrue(($imageSize[0] > 1), 'cached image not required width');
-        $this->assertTrue(($imageSize[1] == 100), 'cached image not required height');
-        $this->assertTrue($imageSize[2] === IMAGETYPE_JPEG, 'cached image isn\'t a jpg');
+        $this->canResize( 0,  100,  $this->jpgImageSubPath,  IMAGETYPE_JPEG,  'jpg');
     }
 
     public function test_canResizePngImageByWidth()
     {
-        $resizedImageURL = URL::to('/pm-image-resizer/w/100'.$this->pngImageSubPath);
-        $response = $this->get($resizedImageURL);
-        $response->assertStatus( 200);
-        $cachedImagePath = $this->cacheFolderPath.'/width/100/'.$this->pngImageSubPath;
-        $this->assertFileExists($cachedImagePath);
-        $imageSize = getimagesize($cachedImagePath);
-        $this->assertTrue(($imageSize[0] == 100), 'cached image not required width');
-        $this->assertTrue(($imageSize[1] > 1), 'cached image not required height');
-        $this->assertTrue($imageSize[2] === IMAGETYPE_PNG, 'cached image isn\'t a png');
+        $this->canResize( 100,  0,  $this->pngImageSubPath,  IMAGETYPE_PNG,  'png');
     }
 
     public function test_canResizePngImageByHeight()
-    {
-        $resizedImageURL = URL::to('/pm-image-resizer/h/100'.$this->pngImageSubPath);
-        $response = $this->get($resizedImageURL);
-        $response->assertStatus( 200);
-        $cachedImagePath = $this->cacheFolderPath.'/height/100/'.$this->pngImageSubPath;
-        $this->assertFileExists($cachedImagePath);
-        $imageSize = getimagesize($cachedImagePath);
-        $this->assertTrue(($imageSize[0] > 1), 'cached image not required width');
-        $this->assertTrue(($imageSize[1] == 100), 'cached image not required height');
-        $this->assertTrue($imageSize[2] === IMAGETYPE_PNG, 'cached image isn\'t a png');
+    {$this->canResize( 0,  100,  $this->pngImageSubPath,  IMAGETYPE_PNG,  'png');
     }
 }

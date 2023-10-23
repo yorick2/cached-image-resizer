@@ -1,18 +1,18 @@
 <?php
-namespace paulmillband\cachedImageResizer\App\Models;
+namespace paulmillband\cachedImageResizer\App\Models\Crop;
 
 use Imagick;
-use paulmillband\cachedImageResizer\App\Models\Resize;
+use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
 
-class crop
+class Crop
 {
     /**
     * @param string $imageFilePath
     * @param string $resizedFilePath
     * @param int $width set to 0 to automaticall calculate
     * @param int $height set to 0 to automaticall calculate$height
-    * @param int $x The X coordinate of the cropped region's top left corner or 0 for center
-    * @param int $y The Y coordinate of the cropped region's top left corner or 0 for center
+    * @param int $xCoord The X coordinate of the cropped region's top left corner or 0 for center
+    * @param int $yCoord The Y coordinate of the cropped region's top left corner or 0 for center
     * @return bool
     * @throws \ImagickException
     * creates a cropped of an image
@@ -21,9 +21,9 @@ class crop
         string $imageFilePath,
         string $resizedFilePath,
         int $width,
-        int $height = 0,
-        int $x=0,
-        int $y=0
+        int $height=0,
+        int $xCoord=0,
+        int $yCoord=0
     ) {
         $file = realpath($imageFilePath);
         if($file===false){
@@ -36,13 +36,13 @@ class crop
         if($width == 0){
             $width = Resize::getResizedWidth($imagick, $height);
         }
-        if($x==0){
-            $x=self::getXCoordinateForCentredImage($imagick, $width);
+        if($xCoord==0){
+            $xCoord=self::getXCoordinateForCentredImage($imagick, $width);
         }
-        if($y==0){
-            $y=self::getYCoordinateForCentredImage($imagick, $height);
+        if($yCoord==0){
+            $yCoord=self::getYCoordinateForCentredImage($imagick, $height);
         }
-        $imagick->cropImage($width,$height, $x, $y);
+        $imagick->cropImage($width,$height, $xCoord, $yCoord);
         $imagick->writeImage($resizedFilePath);
         $imagick->clear();
         $imagick->destroy();

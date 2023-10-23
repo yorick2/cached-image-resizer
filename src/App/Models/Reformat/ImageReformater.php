@@ -1,8 +1,7 @@
 <?php
-namespace paulmillband\cachedImageResizer\App\Models;
+namespace paulmillband\cachedImageResizer\App\Models\Reformat;
 
 use Imagick;
-use function Ramsey\Collection\Map\replace;
 
 class ImageReformater
 {

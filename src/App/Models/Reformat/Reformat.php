@@ -1,7 +1,7 @@
 <?php
-namespace paulmillband\cachedImageResizer\App\Models;
+namespace paulmillband\cachedImageResizer\App\Models\Reformat;
 
-use paulmillband\cachedImageResizer\App\Models\Resize;
+use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
 use Imagick;
 use ImagickPixel;
 

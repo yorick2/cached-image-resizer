@@ -2,43 +2,18 @@
 
 namespace Tests\Unit;
 
-use paulmillband\cachedImageResizer\App\Models\Helper\ImageCacheFolderPath;
-use paulmillband\cachedImageResizer\App\Models\ImageReformater;
-use paulmillband\cachedImageResizer\App\Models\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Reformat\ImageReformater;
+use Tests\ImageTestImageLocations;
 use Tests\TestCase;
 use Imagick;
 
 class ImageReformaterTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
-    const IMAGE_LOCATION_WEBP = __DIR__.'/../../testImages/laptop-400X266.webp';
-    const IMAGE_LOCATION_SVG = __DIR__.'/../../testImages/laptop-400X266.svg';
-    const IMAGE_LOCATION_SVG_TRANSPARENCY = __DIR__.'/../../testImages/laptop-transparency-400X266.svg';
-    private $cacheFolderPath = __DIR__.'/../../testImages/cache';
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
+
     private $imageReformater;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $files = glob($this->cacheFolderPath.'/*'); // get all file names
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $files = glob($this->cacheFolderPath.'/*'); // get all file names
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-    }
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
     {
@@ -63,6 +38,7 @@ class ImageReformaterTest extends TestCase
     ){
         $newImageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.
             str_replace('.', '-', basename($originalFile)).$newFileExtension;
+        $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageReformater::reformatIfNeeded(
             realpath($originalFile),
             $newImageFilePath,
@@ -87,7 +63,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromWebpToJpg()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_WEBP,
+            $this->jpgModuleImagePath,
             'JPEG',
             'jpg');
     }
@@ -95,7 +71,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromWebpToPng()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_WEBP,
+            $this->webpModuleImagePath,
             'PNG',
             'png');
     }
@@ -104,7 +80,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromSvgToJpg()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_SVG,
+            $this->svgModuleImagePath,
             'JPEG',
             'jpg',
             200,
@@ -115,7 +91,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromSvgToWebp()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_SVG,
+            $this->svgModuleImagePath,
             'WEBP',
             'webp',
             200,
@@ -126,7 +102,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromSvgToPng()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_SVG,
+            $this->svgModuleImagePath,
             'PNG',
             'png',
             200,
@@ -137,7 +113,7 @@ class ImageReformaterTest extends TestCase
     public function test_canConvertImageFileFormatsFromSvgToPngWithTransparency()
     {
         $this->canConvertImageFileFormats(
-            self::IMAGE_LOCATION_SVG_TRANSPARENCY,
+            $this->svgWithTransparencyModuleImagePath,
             'PNG',
             'png',
             200,

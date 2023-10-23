@@ -1,44 +1,38 @@
 <?php
-namespace paulmillband\cachedImageResizer\App\Models;
+namespace paulmillband\cachedImageResizer\App\Models\Crop;
 
-use Imagick;
-
-class ImageResizer
+class ImageCropper
 {
     /**
      * @param string $imageFilePath
      * @param string $newPath
      * @param int $width set to 0 to automaticall calculate
      * @param int $height set to 0 to automaticall calculate
-     * @param int $filterType
-     * @param float $blur The blur factor where > 1 is blurry, < 1 is sharp
-     * @param bool $bestFit
-     * @return bool|string resized image url
+     * @param int $xCoord
+     * @param int $yCoord
+     * @return bool
      * @throws \ImagickException
-     * creates a resized copy of an image into a folder named as the width value, inside the cache folder given
      */
-    static function resizeIfNeeded(
+    static function cropIfNeeded(
         string $imageFilePath,
         string $newPath,
         int $width,
-        int $height = 0,
-        int $filterType = Imagick::FILTER_CATROM,
-        float $blur = 1,
-        bool $bestFit = false
+        int $height=0,
+        int $xCoord=0,
+        int $yCoord=0
     ) {
         $newFileDirname = dirname($newPath);
         if(!is_dir($newFileDirname)){
             mkdir($newFileDirname, 0775, true);
         }
         if(!file_exists($newPath)){
-            $success = Resize::resize(
+            $success = Crop::crop(
                 $imageFilePath,
                 $newPath,
                 $width,
                 $height,
-                $filterType,
-                $blur,
-                $bestFit
+                $xCoord,
+                $yCoord
             );
             if($success === false){
                 return false;

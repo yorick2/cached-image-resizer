@@ -3,90 +3,100 @@
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\URL;
-use paulmillband\cachedImageResizer\App\Models\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Crop\CropperCache;
+use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
+use Tests\ImageTestImageLocations;
 use Tests\TestCase;
 use Imagick;
-use function Symfony\Component\String\lower;
 
 class ImageCropperTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
-    const IMAGE_LOCATION_WEBP = __DIR__.'/../../testImages/laptop-400X266.webp';
-    private $imageFolder;
-    private $publicPath;
-    private string $cacheFolderPath;
-    private string $jpgImageSubPath;
-    private string $jpgImagePath;
-    private string $pngImageSubPath;
-    private string $pngImagePath;
-    private string $webpImageSubPath;
-    private string $webpImagePath;
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
 
-    public function __construct(string $name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
+    private $imageCropper;
+    private $CropperCacheClass;
+    private string $cacheFolderPath;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->imageResizer = ImageResizer::class;
-        $this->imageFolder = public_path('images');
+        $this->CropperCacheClass = new CropperCache();
+        $this->imageCropper = ImageCropper::class;
+        if(!$this->setClassVariables("/Crop([A-Za-z]*)Image/")){
+            return;
+        };
+        $this->setUpImages(
+            $this->{$this->imageFileType.'ModuleImagePath'},
+            $this->laravelImageFolder.'/'.$this->{$this->imageFileType.'ImageSubPath'}
+        );
+    }
 
-        $this->cacheFolderPath = public_path('images/cache/');
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-
-        $testName = $this->getName();
-        if(preg_match("/canResize([A-Z][a-z]*)ImageBy/", $testName, $matches)){
-            $this->copyFileToPublicFolder(strtolower($matches[1]));
-        }
+    /** @test */
+    public function test_canVisitTestRoute()
+    {
+        $response = $this->call('GET', '/');
+        $response->assertStatus(200);
+        $response->assertSee('testing page loaded');
     }
 
     /**
-     * @param string $fileType
+     * @param int $width
+     * @param int $height
+     * @param string $imagePath
+     * @param string $format
+     * @throws \ImagickException
      */
-    protected function copyFileToPublicFolder(string $fileType){
-        $filepath = constant('self::IMAGE_LOCATION_'.strtoupper($fileType));
-        $x =$fileType.'ImageSubPath';
-        $this->{$fileType.'ImageSubPath'} = '/test/'.basename($filepath);
-        $this->{$fileType.'ImagePath'} = public_path('images'.$this->{$fileType.'ImageSubPath'});
-        $imgFolderPath = dirname($this->{$fileType.'ImagePath'});
-        if(!is_dir($imgFolderPath)){
-            mkdir($imgFolderPath, 0775, true);
-        }
-        $copySuccess = copy(
-            $filepath,
-            $this->{$fileType.'ImagePath'}
-        );
-        $this->assertTrue($copySuccess, 'Test image could not be copied into place to prepare for test');
-    }
-
-    protected function tearDown(): void
+    protected function canCrop(int $width, int $height, string $imagePath, string $format)
     {
-        parent::tearDown();
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
+        $imagePath = '/'.ltrim($imagePath, '/');
+        $newImageFilePath = $this->CropperCacheClass->newFilePath($width, $height, $imagePath);
+        $this->assertFileDoesNotExist($newImageFilePath);
+        $resizedImageURL = URL::to('/pm-image-resizer/cropped/w/'.$width.'/h/'.$height.$imagePath);
+        $response = $this->get($resizedImageURL);
+        $response->assertStatus( 200);
+        $this->assertFileExists($newImageFilePath);
+        $imagick = new Imagick($newImageFilePath);
+        if($width){
+            $this->assertEquals($imagick->getImageWidth(), $width);
         }
-        $files = glob($this->imageFolder.'/*');
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
+        if($height){
+            $this->assertEquals($imagick->getImageHeight(), $height);
         }
+        $x =$imagick->getImageFormat();
+        $this->assertTrue($imagick->getImageFormat() == $format, 'cached image isn\'t a '.$format);
+        $imagick->clear();
+        $imagick->destroy();
     }
 
-    public function test_canCrop()
+    public function test_canCropJpgImageByWidth()
     {
-      $this->assertTrue(false);
+        $this->canCrop( 100,  0,  $this->jpgImageSubPath,  'JPEG');
     }
 
+    public function test_canCropJpgImageByHeight()
+    {
+        $this->canCrop( 0,  100,  $this->jpgImageSubPath,  'JPEG');
+    }
+
+    public function test_canCropJpgImageByWidthAndHeight()
+    {
+        $this->canCrop( 100,  100,  $this->jpgImageSubPath,  'JPEG');
+    }
+
+    public function test_canCropPngImageByWidth()
+    {
+        $this->canCrop( 100,  0,  $this->pngImageSubPath,  'PNG');
+    }
+
+    public function test_canCropPngImageByHeight()
+    {
+        $this->canCrop( 0,  100,  $this->pngImageSubPath,  'PNG');
+    }
+
+    public function test_canCropPngImageByWidthAndHeight()
+    {
+        $this->canCrop( 100,  100,  $this->pngImageSubPath,  'PNG');
+    }
 }

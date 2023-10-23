@@ -3,16 +3,16 @@
 namespace paulmillband\cachedImageResizer\App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use paulmillband\cachedImageResizer\App\Models\Resize\ImageResizer;
-use paulmillband\cachedImageResizer\App\Models\Resize\ResizeCache;
+use paulmillband\cachedImageResizer\App\Models\Crop\CropperCache;
+use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
 
-class ResizerController extends Controller
+class CropperController extends Controller
 {
     protected $resizeCacheClass;
 
     public function __construct()
     {
-        $this->resizeCacheClass = new ResizeCache();
+        $this->resizeCacheClass = new CropperCache();
     }
 
     /**
@@ -22,9 +22,9 @@ class ResizerController extends Controller
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ImagickException
      */
-    protected function resize(int $width, int $height, string $imgPath){
+    protected function crop(int $width, int $height, string $imgPath){
         $newPath = $this->resizeCacheClass->newFilePath($width, $height, $imgPath);
-        ImageResizer::resizeIfNeeded(
+        ImageCropper::cropIfNeeded(
             public_path('images/'.$imgPath),
             $newPath,
             $width,

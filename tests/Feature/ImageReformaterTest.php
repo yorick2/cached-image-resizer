@@ -3,90 +3,121 @@
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\URL;
-use paulmillband\cachedImageResizer\App\Models\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Reformat\ReformatCache;
+use Tests\ImageTestImageLocations;
 use Tests\TestCase;
 use Imagick;
-use function Symfony\Component\String\lower;
 
 class ImageReformaterTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/laptop-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/laptop-400X266.png';
-    const IMAGE_LOCATION_WEBP = __DIR__.'/../../testImages/laptop-400X266.webp';
-    private $imageFolder;
-    private $publicPath;
-    private string $cacheFolderPath;
-    private string $jpgImageSubPath;
-    private string $jpgImagePath;
-    private string $pngImageSubPath;
-    private string $pngImagePath;
-    private string $webpImageSubPath;
-    private string $webpImagePath;
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
 
-    public function __construct(string $name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
+    private $reformatCacheClass;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->imageResizer = ImageResizer::class;
-        $this->imageFolder = public_path('images');
-
-        $this->cacheFolderPath = public_path('images/cache/');
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
+        $this->reformatCacheClass = new ReformatCache();
+        if(!$this->setClassVariables("/From([A-Za-z]*)To/")){
+            return;
         }
-
-        $testName = $this->getName();
-        if(preg_match("/canResize([A-Z][a-z]*)ImageBy/", $testName, $matches)){
-            $this->copyFileToPublicFolder(strtolower($matches[1]));
-        }
+        $this->setUpImages($this->{$this->imageFileType.'ModuleImagePath'}, $this->laravelImageFolder.'/'.$this->{$this->imageFileType.'ImageSubPath'});
     }
 
-    /**
-     * @param string $fileType
-     */
-    protected function copyFileToPublicFolder(string $fileType){
-        $filepath = constant('self::IMAGE_LOCATION_'.strtoupper($fileType));
-        $x =$fileType.'ImageSubPath';
-        $this->{$fileType.'ImageSubPath'} = '/test/'.basename($filepath);
-        $this->{$fileType.'ImagePath'} = public_path('images'.$this->{$fileType.'ImageSubPath'});
-        $imgFolderPath = dirname($this->{$fileType.'ImagePath'});
-        if(!is_dir($imgFolderPath)){
-            mkdir($imgFolderPath, 0775, true);
+    protected function canConvertImageFileFormats(
+        string $originalFilePath,
+        string $newFormat,
+        string $newFileExtension,
+        int $width=0,
+        int $height=0
+    ){
+        $originalFileRelativePath = str_replace(public_path('images'),'',$originalFilePath);
+        $imgCode = str_replace('.','-', $originalFileRelativePath);
+        $newImageFilePath = $this->reformatCacheClass->newFilePath($imgCode, $newFormat, $newFileExtension, $width, $height);
+        $this->assertFileDoesNotExist($newImageFilePath);
+        $imageUrl = URL::to('/pm-image-resizer/converted/'.$newFormat.'/w/'.$width.'/h/'.$height.$imgCode.'.'.$newFileExtension);;
+        $response = $this->get($imageUrl);
+        $response->assertStatus( 200);
+        $this->assertFileExists($newImageFilePath);
+
+        $oldImagick = new Imagick($originalFilePath);
+        $newImagick = new Imagick($newImageFilePath);
+        if($width==0){
+            $width = $oldImagick->getImageWidth();
         }
-        $copySuccess = copy(
-            $filepath,
-            $this->{$fileType.'ImagePath'}
+        if($height==0){
+            $height = $oldImagick->getImageHeight();
+        }
+        $this->assertEquals($newImagick->getImageWidth(), $width);
+        $this->assertEquals($newImagick->getImageHeight(), $height);
+        $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
+        $newImagick->clear();
+    }
+
+
+    public function test_canConvertImageFileFormatsFromWebpToJpg()
+    {
+        $this->canConvertImageFileFormats(
+            $this->webpLaravelImagePath,
+            'JPEG',
+            'jpg'
         );
-        $this->assertTrue($copySuccess, 'Test image could not be copied into place to prepare for test');
     }
 
-    protected function tearDown(): void
+    public function test_canConvertImageFileFormatsFromWebpToPng()
     {
-        parent::tearDown();
-        $files = glob($this->cacheFolderPath."/*/*/*/*");
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
-        $files = glob($this->imageFolder.'/*');
-        foreach($files as $file){
-            if(is_file($file)) {
-                unlink($file);
-            }
-        }
+        $this->canConvertImageFileFormats(
+            $this->webpLaravelImagePath,
+            'PNG',
+            'png'
+        );
     }
 
-    public function test_canReformat()
+
+    public function test_canConvertImageFileFormatsFromSvgToJpg()
     {
-      $this->assertTrue(false);
+        $this->canConvertImageFileFormats(
+            $this->svgLaravelImagePath,
+            'JPEG',
+            'jpg',
+            200,
+            133
+        );
+    }
+
+    public function test_canConvertImageFileFormatsFromSvgToWebp()
+    {
+        $this->canConvertImageFileFormats(
+            $this->svgLaravelImagePath,
+            'WEBP',
+            'webp',
+            200,
+            133
+        );
+    }
+
+    public function test_canConvertImageFileFormatsFromSvgToPng()
+    {
+        $this->canConvertImageFileFormats(
+            $this->svgLaravelImagePath,
+            'PNG',
+            'png',
+            200,
+            133
+        );
+    }
+
+    public function test_canConvertImageFileFormatsFromSvgWithTransparencyToPng()
+    {
+        $this->canConvertImageFileFormats(
+            $this->svgWithTransparencyLaravelImagePath,
+            'PNG',
+            'png',
+            200,
+            133
+        );
     }
 
 }
