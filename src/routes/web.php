@@ -16,14 +16,14 @@ Route::get('/pm-image-resizer/w/{width}/h/{height}/{img?}',
 
 Route::get(
     '/pm-image-resizer/cropped/w/{width}/h/{height}/{img?}',
-    [CropperController::class, 'crop']
+    [CropperController::class, 'resizeAndCrop']
 )
     ->name('pm-image-cropper')
     ->where('img', '(.*)');
 
 Route::get(
     '/pm-image-resizer/converted/{format}/w/{width}/h/{height}/{imgcode}.{extension?}',
-    [ReformaterController::class, 'reformat']
+    [ReformaterController::class, 'resizeAndReformat']
 )
     ->name('pm-image-converter')
     ->where('imgcode', '([^.]*)');

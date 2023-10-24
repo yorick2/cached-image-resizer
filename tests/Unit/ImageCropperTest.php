@@ -30,9 +30,11 @@ class ImageCropperTest extends TestCase
     protected function canCrop(string $filepath, string $format, int $width, int $height=0){
         $newImageFilePath = realpath($this->cacheFolderPath).'/'.basename($filepath);
         $this->assertFileDoesNotExist($newImageFilePath);
-        $this->imageCropper::cropIfNeeded(
+        $this->imageCropper::resizeAndCropIfNeeded(
             realpath($filepath),
             $newImageFilePath,
+            -1,
+            -1,
             $width,
             $height
         );

@@ -15,7 +15,7 @@ class ImageReformater
      * @throws \ImagickException
      * creates a copy of an image in a new image format e.g. jpg > png
      */
-    static function reformatIfNeeded(
+    static function resizeAndReformatIfNeeded(
         string $imageFilePath,
         string $newPath,
         string $requiredFileType,
@@ -27,7 +27,7 @@ class ImageReformater
             mkdir($dirname, 0775, true);
         }
         if(!file_exists($newPath)){
-            $success = Reformat::reformat(
+            $success = Reformat::resizeAndReformat(
                 $imageFilePath,
                 $newPath,
                 $requiredFileType,

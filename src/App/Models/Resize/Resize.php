@@ -21,10 +21,10 @@ class Resize
         string $imageFilePath,
         string $resizedFilePath,
         int $width,
-        int $height = 0,
+        int $height=0,
         int $filterType = Imagick::FILTER_CATROM,
-        float $blur = 1,
-        bool $bestFit = false
+        float $blur=1,
+        bool $bestFit=false
     ) {
         $file = realpath($imageFilePath);
         if($file===false){

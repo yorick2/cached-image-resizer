@@ -17,7 +17,7 @@ class Reformat
     * @throws \ImagickException
     * creates a copy of an image in a different format
     */
-    public static function reformat(
+    public static function resizeAndReformat(
         string $originalFilePath,
         string $newFilePath,
         string $requiredFileType,

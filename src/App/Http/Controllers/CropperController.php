@@ -16,17 +16,20 @@ class CropperController extends Controller
     }
 
     /**
-     * @param int $width
-     * @param int $height
+     * crops from center of image if needed
+     * @param int $width set to 0 to automatically calculate
+     * @param int $height set to 0 to automatically calculate
      * @param string $imgPath
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ImagickException
      */
-    protected function crop(int $width, int $height, string $imgPath){
+    protected function resizeAndCrop( int $width, int $height, string $imgPath){
         $newPath = $this->resizeCacheClass->newFilePath($width, $height, $imgPath);
-        ImageCropper::cropIfNeeded(
+        ImageCropper::resizeAndCropIfNeeded(
             public_path('images/'.$imgPath),
             $newPath,
+            -1,
+            -1,
             $width,
             $height
         );

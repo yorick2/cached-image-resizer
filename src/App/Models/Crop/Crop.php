@@ -7,42 +7,55 @@ use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
 class Crop
 {
     /**
-    * @param string $imageFilePath
-    * @param string $resizedFilePath
-    * @param int $width set to 0 to automaticall calculate
-    * @param int $height set to 0 to automaticall calculate$height
-    * @param int $xCoord The X coordinate of the cropped region's top left corner or 0 for center
-    * @param int $yCoord The Y coordinate of the cropped region's top left corner or 0 for center
-    * @return bool
-    * @throws \ImagickException
-    * creates a cropped of an image
-    */
-    static function crop(
+     * @param string $imageFilePath
+     * @param string $resizedFilePath
+     * @param int $xCoordinate The X coordinate of the cropped region's top left corner or -1 for center
+     * @param int $yCoordinate The Y coordinate of the cropped region's top left corner or -1 for center
+     * @param int $width set to 0 to automatically calculate
+     * @param int $height set to 0 to automatically calculate
+     * @param int $filterType
+     * @param float $blur
+     * @param bool $bestFit
+     * @return bool
+     * @throws \ImagickException
+     */
+    static function resizeAndCrop(
         string $imageFilePath,
         string $resizedFilePath,
-        int $width,
+        int $xCoordinate=-1,
+        int $yCoordinate=-1,
+        int $width=0,
         int $height=0,
-        int $xCoord=0,
-        int $yCoord=0
+        int $filterType = Imagick::FILTER_CATROM,
+        float $blur=1,
+        bool $bestFit=false
     ) {
         $file = realpath($imageFilePath);
         if($file===false){
             return false;
         }
         $imagick = new Imagick($file);
-        if($height == 0){
-            $height = Resize::getResizedHeight($imagick, $width);
-        }
         if($width == 0){
-            $width = Resize::getResizedWidth($imagick, $height);
+            $width = $imagick->getImageWidth();
         }
-        if($xCoord==0){
-            $xCoord=self::getXCoordinateForCentredImage($imagick, $width);
+        if($height == 0){
+            $height = $imagick->getImageHeight();
         }
-        if($yCoord==0){
-            $yCoord=self::getYCoordinateForCentredImage($imagick, $height);
+        $resizeHeight = Resize::getResizedHeight($imagick, $width);
+        if($resizeHeight >= $height){
+            $resizeWidth = $width;
+        }else{
+            $resizeWidth = Resize::getResizedWidth($imagick, $height);
+            $resizeHeight = $height;
         }
-        $imagick->cropImage($width,$height, $xCoord, $yCoord);
+        if($xCoordinate==-1){
+            $xCoordinate=self::getCoordinateForCentredImage($resizeWidth, $width);
+        }
+        if($yCoordinate==-1){
+            $yCoordinate=self::getCoordinateForCentredImage($resizeHeight, $height);
+        }
+        $imagick->resizeImage($resizeWidth, $resizeHeight, $filterType, $blur, $bestFit);
+        $imagick->cropImage($width,$height, $xCoordinate, $yCoordinate);
         $imagick->writeImage($resizedFilePath);
         $imagick->clear();
         $imagick->destroy();
@@ -50,22 +63,12 @@ class Crop
     }
 
     /**
-     * @param Imagick $imagick
-     * @param int $newWidth
-     * @return int
-     */
-    public static function getXCoordinateForCentredImage(Imagick $imagick, int $newWidth){
-        $sizeDifference = $imagick->getImageWidth() - $newWidth;
-        return round($sizeDifference / 2);
-    }
-
-    /**
-     * @param Imagick $imagick
-     * @param int $newHeight
+     * @param int $originalLength
+     * @param int $newLength
      * @return float
      */
-    public static function getYCoordinateForCentredImage(Imagick $imagick, int $newHeight){
-        $sizeDifference = $imagick->getImageHeight() - $newHeight;
+    public static function getCoordinateForCentredImage(int $originalLength, int $newLength){
+        $sizeDifference = $originalLength - $newLength;
         return round($sizeDifference / 2);
     }
 

@@ -37,8 +37,13 @@ class ImageReformaterTest extends TestCase
         $imgCode = str_replace('.','-', $originalFileRelativePath);
         $newImageFilePath = $this->reformatCacheClass->newFilePath($imgCode, $newFormat, $newFileExtension, $width, $height);
         $this->assertFileDoesNotExist($newImageFilePath);
-        $imageUrl = URL::to('/pm-image-resizer/converted/'.$newFormat.'/w/'.$width.'/h/'.$height.$imgCode.'.'.$newFileExtension);;
-        $response = $this->get($imageUrl);
+        $response = $this->get(route('pm-image-converter', [
+            'format' => $newFormat,
+            'width' => $width,
+            'height' => $height,
+            'imgcode' => $imgCode,
+            'extension' => $newFileExtension
+        ]));
         $response->assertStatus( 200);
         $this->assertFileExists($newImageFilePath);
 

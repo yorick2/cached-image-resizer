@@ -75,12 +75,23 @@ Adding the component to another component.
 <ImageResizer></ImageResizer>
 ```
 
+#Technical notes
+##Resize
+Resize an image
+
+##Crop
+Resize And crop to fit size given
+
+##Reformat
+Resize and save in a new format e.g. use a webp image and save as a jpg
+
 # Options
 ## .env
 |'image_cache_folder' | cache folder path ( relative to the public path)|
 
 # Testing
-## Setup
+vendor/bin/phpunit 
+
+## Setup visually testing
 composer install
 vendor/bin/testbench serve
-vendor/bin/phpunit 

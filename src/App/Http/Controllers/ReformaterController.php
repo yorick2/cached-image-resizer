@@ -22,7 +22,7 @@ class ReformaterController extends Controller
      * @param int $height
      * @param string $format
      */
-    protected function reformat(
+    protected function resizeAndReformat(
         Request $request,
         string $format,
         int $width,
@@ -32,7 +32,7 @@ class ReformaterController extends Controller
     ){
         $newPath = $this->reformatCacheClass->newFilePath($imgcode, $format, $extension, $width, $height);
         $img = preg_replace('/-([a-zA-Z]*)$/','.$1', $imgcode);
-        ImageReformater::reformatIfNeeded(
+        ImageReformater::resizeAndReformatIfNeeded(
             public_path('images/'.$img),
             $newPath,
             $format,

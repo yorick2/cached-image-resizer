@@ -53,8 +53,11 @@ class ImageCropperTest extends TestCase
         $imagePath = '/'.ltrim($imagePath, '/');
         $newImageFilePath = $this->CropperCacheClass->newFilePath($width, $height, $imagePath);
         $this->assertFileDoesNotExist($newImageFilePath);
-        $resizedImageURL = URL::to('/pm-image-resizer/cropped/w/'.$width.'/h/'.$height.$imagePath);
-        $response = $this->get($resizedImageURL);
+        $response = $this->get(route('pm-image-cropper', [
+                'width' => $width,
+                'height' => $height,
+                'img' => $imagePath
+            ]));
         $response->assertStatus( 200);
         $this->assertFileExists($newImageFilePath);
         $imagick = new Imagick($newImageFilePath);
@@ -64,7 +67,6 @@ class ImageCropperTest extends TestCase
         if($height){
             $this->assertEquals($imagick->getImageHeight(), $height);
         }
-        $x =$imagick->getImageFormat();
         $this->assertTrue($imagick->getImageFormat() == $format, 'cached image isn\'t a '.$format);
         $imagick->clear();
         $imagick->destroy();

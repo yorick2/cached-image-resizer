@@ -33,4 +33,22 @@ class ResizerController extends Controller
         return response()->file($newPath);
     }
 
+    /**
+     * @param int $width
+     * @param int $height
+     * @param string $imgPath
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \ImagickException
+     */
+    protected function resizeAndReformat(int $width, int $height, string $imgPath){
+        $newPath = $this->resizeCacheClass->newFilePath($width, $height, $imgPath);
+        ImageResizer::resizeIfNeeded(
+            public_path('images/'.$imgPath),
+            $newPath,
+            $width,
+            $height
+        );
+        return response()->file($newPath);
+    }
+
 }

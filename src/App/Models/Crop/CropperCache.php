@@ -9,7 +9,7 @@ class CropperCache
 
     public function __construct()
     {
-        $this->cacheFolderPath = ImageCacheFolderPath::getImageCacheFolderPath();
+        $this->cacheFolderPath = ImageCacheFolderPath::getImageCacheFolderPath().'/cropped';
     }
 
     /**

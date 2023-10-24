@@ -53,8 +53,11 @@ class ImageResizerTest extends TestCase
         $imagePath = '/'.ltrim($imagePath, '/');
         $cachedImagePath = $this->resizeCacheClass->newFilePath($width, $height, $imagePath);
         $this->assertFileDoesNotExist($cachedImagePath);
-        $resizedImageURL = URL::to('/pm-image-resizer/w/'.$width.'/h/'.$height.$imagePath);
-        $response = $this->get($resizedImageURL);
+        $response = $this->get(route('pm-image-resizer', [
+            'width' => $width,
+            'height' => $height,
+            'img' => $imagePath
+        ]));
         $response->assertStatus( 200);
         $this->assertFileExists($cachedImagePath);
         $imageSize = getimagesize($cachedImagePath);
