@@ -58,7 +58,10 @@ class ImageReformaterTest extends TestCase
         $this->assertEquals($newImagick->getImageWidth(), $width);
         $this->assertEquals($newImagick->getImageHeight(), $height);
         $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
+        $oldImagick->clear();
+        $oldImagick->destroy();
         $newImagick->clear();
+        $newImagick->destroy();
     }
 
 

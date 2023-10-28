@@ -29,6 +29,8 @@ class ImageResizerTest extends TestCase
      * @throws \ImagickException
      */
     protected function canResize(string $filepath, string $format, int $width, int $height){
+        $this->assertFileExists($filepath);
+        $this->assertFileIsReadable($filepath);
         $newImageFilePath = realpath($this->cacheFolderPath).'/'.basename($filepath);
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageResizer::resizeIfNeeded(

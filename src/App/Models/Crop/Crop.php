@@ -22,11 +22,12 @@ class Crop
     static function resizeAndCrop(
         string $imageFilePath,
         string $resizedFilePath,
+        string $requiredFileType='',
         int $xCoordinate=-1,
         int $yCoordinate=-1,
         int $width=0,
         int $height=0,
-        int $filterType = Imagick::FILTER_CATROM,
+        int $filterType=Imagick::FILTER_CATROM,
         float $blur=1,
         bool $bestFit=false
     ) {
@@ -54,11 +55,20 @@ class Crop
         if($yCoordinate==-1){
             $yCoordinate=self::getCoordinateForCentredImage($resizeHeight, $height);
         }
-        $imagick->resizeImage($resizeWidth, $resizeHeight, $filterType, $blur, $bestFit);
-        $imagick->cropImage($width,$height, $xCoordinate, $yCoordinate);
-        $imagick->writeImage($resizedFilePath);
-        $imagick->clear();
-        $imagick->destroy();
+        self::resizeAndCropAction(
+            $imagick,
+            $requiredFileType,
+            $resizeWidth,
+            $resizeHeight,
+            $resizedFilePath,
+            $xCoordinate,
+            $yCoordinate,
+            $width,
+            $height,
+            $filterType,
+            $blur,
+            $bestFit
+        );
         return true;
     }
 
@@ -70,6 +80,44 @@ class Crop
     public static function getCoordinateForCentredImage(int $originalLength, int $newLength){
         $sizeDifference = $originalLength - $newLength;
         return round($sizeDifference / 2);
+    }
+
+    /**
+     * @param Imagick $imagick
+     * @param string $requiredFileType
+     * @param int $resizeWidth
+     * @param int $resizeHeight
+     * @param string $resizedFilePath
+     * @param int $xCoordinate
+     * @param int $yCoordinate
+     * @param int $width
+     * @param int $height
+     * @param int $filterType
+     * @param float $blur
+     * @param bool $bestFit
+     */
+    protected static function resizeAndCropAction(
+        Imagick $imagick,
+        string $requiredFileType,
+        int $resizeWidth,
+        int $resizeHeight,
+        string $resizedFilePath,
+        int $xCoordinate=-1,
+        int $yCoordinate=-1,
+        int $width=0,
+        int $height=0,
+        int $filterType=Imagick::FILTER_CATROM,
+        float $blur=1,
+        bool $bestFit=false
+    ){
+        $imagick->resizeImage($resizeWidth, $resizeHeight, $filterType, $blur, $bestFit);
+        $imagick->cropImage($width,$height, $xCoordinate, $yCoordinate);
+        if($requiredFileType){
+            $imagick->setImageFormat($requiredFileType);
+        }
+        $imagick->writeImage($resizedFilePath);
+        $imagick->clear();
+        $imagick->destroy();
     }
 
 }

@@ -28,11 +28,14 @@ class ImageCropperTest extends TestCase
      * @throws \ImagickException
      */
     protected function canCrop(string $filepath, string $format, int $width, int $height=0){
+        $this->assertFileExists($filepath);
+        $this->assertFileIsReadable($filepath);
         $newImageFilePath = realpath($this->cacheFolderPath).'/'.basename($filepath);
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageCropper::resizeAndCropIfNeeded(
             realpath($filepath),
             $newImageFilePath,
+            '',
             -1,
             -1,
             $width,

@@ -36,8 +36,10 @@ class ImageReformaterTest extends TestCase
         int $width=0,
         int $height=0
     ){
+        $this->assertFileExists($originalFile);
+        $this->assertFileIsReadable($originalFile);
         $newImageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.
-            str_replace('.', '-', basename($originalFile)).$newFileExtension;
+            str_replace('.', '-', basename($originalFile)).'.'.$newFileExtension;
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageReformater::resizeAndReformatIfNeeded(
             realpath($originalFile),
@@ -58,6 +60,7 @@ class ImageReformaterTest extends TestCase
         $this->assertEquals($newImagick->getImageHeight(), $height);
         $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
         $newImagick->clear();
+        $newImagick->destroy();
     }
 
     public function test_canConvertImageFileFormatsFromWebpToJpg()

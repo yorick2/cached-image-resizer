@@ -6,6 +6,7 @@ class ImageCropper
     /**
      * @param string $imageFilePath
      * @param string $newPath
+     * @param string $requiredFileType
      * @param int $xCoordinate The X coordinate of the cropped region's top left corner or -1 for center
      * @param int $yCoordinate The Y coordinate of the cropped region's top left corner or -1 for center
      * @param int $width set to 0 to automatically calculate
@@ -16,6 +17,7 @@ class ImageCropper
     static function resizeAndCropIfNeeded(
         string $imageFilePath,
         string $newPath,
+        string $requiredFileType='',
         int $xCoordinate=-1,
         int $yCoordinate=-1,
         int $width=0,
@@ -29,6 +31,7 @@ class ImageCropper
             $success = Crop::resizeAndCrop(
                 $imageFilePath,
                 $newPath,
+                $requiredFileType,
                 $xCoordinate,
                 $yCoordinate,
                 $width,

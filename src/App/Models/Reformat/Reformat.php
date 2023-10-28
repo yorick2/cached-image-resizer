@@ -32,7 +32,7 @@ class Reformat
             self::simpleReformat($originalFilePath,  $newFilePath,  $requiredFileType);
             return true;
         }
-        self::reformatAndResize(
+        self::ResizeAndReformatAction(
             $originalFilePath,
             $newFilePath,
             $requiredFileType,
@@ -50,7 +50,7 @@ class Reformat
         $imagick->destroy();
     }
 
-    protected static function reformatAndResize(
+    protected static function ResizeAndReformatAction(
         string $originalFilePath,
         string $newFilePath,
         string $requiredFileType,

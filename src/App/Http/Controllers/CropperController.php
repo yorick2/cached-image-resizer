@@ -28,6 +28,7 @@ class CropperController extends Controller
         ImageCropper::resizeAndCropIfNeeded(
             public_path('images/'.$imgPath),
             $newPath,
+            '',
             -1,
             -1,
             $width,

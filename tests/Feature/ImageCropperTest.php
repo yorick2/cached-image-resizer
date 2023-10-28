@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\URL;
 use paulmillband\cachedImageResizer\App\Models\Crop\CropperCache;
 use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
 use Tests\ImageTestImageLocations;
