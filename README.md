@@ -99,3 +99,7 @@ vendor/bin/phpunit
 ## Setup visually testing
 composer install
 vendor/bin/testbench serve
+
+## Run Vue example
+npm install
+npm run dev

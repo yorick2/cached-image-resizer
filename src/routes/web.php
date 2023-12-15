@@ -5,9 +5,9 @@ use paulmillband\cachedImageResizer\App\Http\Controllers\CropperReformatControll
 use paulmillband\cachedImageResizer\App\Http\Controllers\ReformaterController;
 use paulmillband\cachedImageResizer\App\Http\Controllers\ResizerController;
 
-Route::get('/', function () {
-    return "testing page loaded";
-});
+//Route::get('/', function () {
+//    return "testing page loaded";
+//});
 
 Route::get('/pm-image-resizer/w/{width}/h/{height}/{img?}',
     [ResizerController::class, 'resize']

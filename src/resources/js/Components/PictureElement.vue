@@ -1,15 +1,14 @@
-
 <template>
     <div>
         <h1>testing testing testing juisadhgf</h1>
         <!-- resolution switching -->
-        <img
-            :src="src"
-            :srcset="srcset"
-            :sizes="sizesAttribute"
-            :alt="alt"
-            :loading="loading"
-        />
+<!--        <img-->
+<!--            :src="src"-->
+<!--            :srcset="srcset"-->
+<!--            :sizes="sizesAttribute"-->
+<!--            :alt="alt"-->
+<!--            :loading="loading"-->
+<!--        />-->
 
         <!-- art direction -->
         <!-- WebP formats???? -->

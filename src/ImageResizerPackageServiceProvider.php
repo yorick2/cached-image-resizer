@@ -12,12 +12,12 @@ class ImageResizerPackageServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->publishes(
-            [
-                __DIR__ . '/resources/js/Components/Picture.vue' =>
-                    resource_path('resources/js/Components/Picture.vue')
-            ],
-            'vue-components');
+//        $this->publishes(
+//            [
+//                __DIR__ . '/resources/js/Components/PictureElement.vue' =>
+//                    resource_path('resources/js/Components/PictureElement.vue')
+//            ],
+//            'vue-components');
         $this->publishes(
             [
                 __DIR__ . '/App/Http/Controllers/PaulMillband/CacheImageResizer/ResizerController.php' =>
