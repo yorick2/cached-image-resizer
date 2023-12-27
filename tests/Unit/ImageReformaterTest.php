@@ -38,7 +38,7 @@ class ImageReformaterTest extends TestCase
     ){
         $this->assertFileExists($originalFile);
         $this->assertFileIsReadable($originalFile);
-        $newImageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.
+        $newImageFilePath = realpath(__DIR__ . '/../../public/images/cache').'/'.
             str_replace('.', '-', basename($originalFile)).'.'.$newFileExtension;
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageReformater::resizeAndReformatIfNeeded(

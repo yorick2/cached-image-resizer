@@ -1,5 +1,6 @@
 /vendor
-/testImages/cache
+/public/images/cache
+
 # Logs
 logs
 *.log

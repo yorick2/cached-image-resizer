@@ -26,7 +26,7 @@ trait ImageTestSetVariablesTrait
             $this->imageFileType = lcfirst($matches[1]);
             $filepath = $this->{$this->imageFileType.'ModuleImagePath'};
             $variableName = $this->imageFileType.'ImageSubPath';
-            $this->{$variableName} = 'test/'.basename($filepath);
+            $this->{$variableName} = basename($filepath);
             $this->{$this->imageFileType.'LaravelImagePath'} = $this->laravelImageFolder.'/'.$this->{$variableName};
             return true;
         }

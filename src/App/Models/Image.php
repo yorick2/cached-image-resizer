@@ -97,6 +97,6 @@ class Image
             $protocol = "http://";
         }
         return $protocol.$_SERVER['HTTP_HOST']
-            .str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath($this->filePath));
+            .str_replace($_SERVER['DOCUMENT_ROOT'].'/public', '', realpath($this->filePath));
     }
 }

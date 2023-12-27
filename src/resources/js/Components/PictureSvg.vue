@@ -15,8 +15,8 @@
 
         <picture>
             <source
-                srcset="image-small.png 320w, image-medium.png 800w, image-large.png 1200w"
-                sizes="${sizes}"
+                    srcset="image-small.png 320w, image-medium.png 800w, image-large.png 1200w"
+                    sizes="${sizes}"
             />
             <img src="image-small.png" alt="Image description" />
         </picture>

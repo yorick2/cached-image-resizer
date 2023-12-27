@@ -16,6 +16,12 @@
             "role": "Developer"
         }
     ],
+    "funding": [
+        {
+            "type": "paypal",
+            "url": "https://www.paypal.com/donate/?hosted_button_id=95TTM4Z9Q7MNG"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "paulmillband\\cachedImageResizer\\": "src/"

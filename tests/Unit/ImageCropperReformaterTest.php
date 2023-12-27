@@ -30,7 +30,7 @@ class ImageCropperReformaterTest extends TestCase
     protected function canCropAndReformat(string $filepath, string $format, int $width, int $height, string $newFileExtension){
         $this->assertFileExists($filepath);
         $this->assertFileIsReadable($filepath);
-        $newImageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.
+        $newImageFilePath = realpath(__DIR__ . '/../../public/images/cache').'/'.
             str_replace('.', '-', basename($filepath)).'.'.$newFileExtension;
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageCropper::resizeAndCropIfNeeded(

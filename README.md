@@ -28,6 +28,11 @@
 [ico-vue-version]: https://img.shields.io/badge/Vue-2-brightgreen?style=for-the-badge&logo=vue.js
 [ico-php-version]: https://img.shields.io/badge/PHP-8.1-brightgreen?style=for-the-badge&logo=php
 
+# Funding
+Thank you for any donations 
+
+## Paypal
+https://www.paypal.com/donate/?hosted_button_id=95TTM4Z9Q7MNG
 
 # cached-image-resizer
 Provide one image, then the multiple images of the given sizes are created and cached. Then placed in our picture element component providing the best image for the end users device. 
@@ -96,10 +101,12 @@ Resize and save in a new format e.g. use a webp image and save as a jpg
 # Testing
 vendor/bin/phpunit 
 
-## Setup visually testing
-composer install
-vendor/bin/testbench serve
-
 ## Run Vue example
 npm install
 npm run dev
+
+## Run backend php example
+composer install
+npm run build
+vendor/bin/testbench serve
+go to http://localhost:8000/index.html

@@ -7,7 +7,7 @@ trait ImageTestSetVariablesTrait
     public function setClassVariables()
     {
         $this->laravelImageFolder = public_path('images');
-        $this->cacheFolderPath = __DIR__.'/../../testImages/cache';
+        $this->cacheFolderPath = __DIR__ . '/../../public/images/cache';
     }
 
 }

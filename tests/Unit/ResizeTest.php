@@ -23,7 +23,7 @@ class ResizeTest extends TestCase
 
     protected function canResize(string $filePath, string $format, int $width, int $height)
     {
-        $newImageFilePath = __DIR__.'/../../testImages/cache/'.basename($filePath);
+        $newImageFilePath = __DIR__ . '/../../public/images/cache/' .basename($filePath);
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageClass::resize( $filePath, $newImageFilePath, $width);
         $imageFilePath = realpath($this->cacheFolderPath).'/'.basename($filePath);

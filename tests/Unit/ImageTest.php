@@ -40,7 +40,7 @@ class ImageTest extends TestCase
         $_SERVER['DOCUMENT_ROOT'] = realpath(__DIR__.'/../../');
         $image = new $this->imageClass($this->jpgModuleImagePath);
         $this->assertEquals($image->url,
-            'https://'.$_SERVER['HTTP_HOST'].'/testImages/laptop-400X266.jpg');
+            'https://'.$_SERVER['HTTP_HOST'].'/images/laptop-400X266.jpg');
     }
 
 }
