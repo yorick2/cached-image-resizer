@@ -46,7 +46,8 @@ trait ImageTestFilesTrait
      * @param string $destFilepath
      */
     protected function copyFileToPublicFolder(string $sourceFilepath, string $destFilepath){
-        $imgFolderPath = dirname($sourceFilepath);
+        $this->assertFileExists($sourceFilepath, 'sourceFile dos not exist');
+        $imgFolderPath = dirname($destFilepath);
         if(!is_dir($imgFolderPath)){
             mkdir($imgFolderPath, 0775, true);
         }
