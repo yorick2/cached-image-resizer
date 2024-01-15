@@ -1,8 +1,6 @@
 <template>
-    <picture>
-        <img v-if="img" :src="img" :srcset="svg" :alt="alt" :loading="loading">
-        <img v-else :src="svg" :alt="alt" :loading="loading">
-    </picture>
+    <img v-if="img" :src="img" :srcset="svg" :alt="alt" :loading="loading">
+    <img v-else :src="svg" :alt="alt" :loading="loading">
 </template>
 
 <script setup>

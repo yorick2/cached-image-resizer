@@ -1,17 +1,11 @@
 <template>
-    <picture>
-<!--        <source-->
-<!--                :srcset="getWebpSrcset()"-->
-<!--                :sizes="sizesAttribute"-->
-<!--                type="image/webp"-->
-<!--        />-->
-        <source
-                :srcset="getSrcset"
-                :sizes="sizesAttribute"
-                :type="'image/'+type"
-        />
-        <img :src="src"  :alt="alt" :loading="loading" />
-    </picture>
+    <img
+            :srcset="getSrcset"
+            :sizes="sizesAttribute"
+            :alt="alt"
+            :loading="loading"
+            :src="'/images/'+src"
+    />
 </template>
 
 <script setup>
@@ -24,32 +18,39 @@
             required: true
         },
         "src": {
+            description: "fallback image file",
+            type: String,
+            required: true
+        },
+        "img": {
             description: "image file",
             type: String,
             required: true
         },
-        "type": {
-            description: "required fallback type",
+        "sizesAttribute": {
+            description: "size of the slot for the image on the page e.g. (min-width: 60rem) 80vw, (min-width: 40rem) 90vw, 100vw",
+            default: "320w, 800w, 1200w", // % values no allowed
             type: String,
-            required: false,
-            default: 'jpg'
+            required: false
         },
-        "requiredSizes": {
-            description: "image file sizes",
+        "requiredWidthSizes": {
+            description: "image file width sizes",
             default() {
-                return ["320w", "800w", "1200w"]
+                return ["320", "800", "1200"]
             },
             type: Array,
             required: false
         },
-        "sizesAttribute": {
-            description: "size of the slot for the image on the page",
-            default: "(min-width: 60rem) 80vw, (min-width: 40rem) 90vw, 100vw", // % values no allowed
-            type: String,
+        "requiredHeightSizes": {
+            description: "image file height sizes",
+            default() {
+                return ["0", "0", "0"]
+            },
+            type: Array,
             required: false
         },
         "loading": {
-            description: "Specifies whether a browser should load an image immediately or to defer loading of images until some conditions are met",
+            description: "[lazy|eager]Specifies whether a browser should load an image immediately or to defer loading of images until some conditions are met",
             default: "lazy",
             type: String,
             required: false
@@ -58,9 +59,9 @@
     // eg. image-small.png 320w, image-medium.png 800w, image-large.png 1200w
     // /pm-image-resizer/w/{width}/h/{height}/{img?}
     const getSrcset = computed(() => {
-        let string = '/pm-image-resizer/w/'+props.requiredSizes[0]+'/h/0/'+props.src + ' ' + props.requiredSizes[0];
-        for (let i=1; i<props.requiredSizes.length; i++){
-            string += ', ' + props.src + ' ' + props.requiredSizes[i]
+        let string = '';
+        for (let i=0; i<props.requiredWidthSizes.length; i++){
+            string += '/pm-image-resizer/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.img + ' ' + props.requiredWidthSizes[i]+"w ,";
         }
         return string;
     });

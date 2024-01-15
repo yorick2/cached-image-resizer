@@ -109,4 +109,5 @@ npm run dev
 composer install
 npm run build
 vendor/bin/testbench serve
+go to http://localhost:8000 to check the server loaded ok
 go to http://localhost:8000/index.html
