@@ -99,11 +99,24 @@ Resize and save in a new format e.g. use a webp image and save as a jpg
 |'image_cache_folder' | cache folder path ( relative to the public path)|
 
 # Testing
-vendor/bin/phpunit 
+vendor/bin/phpunit
+
+## useful file paths locations
+| description | file path |
+| -------- | ------- |
+| public path in vite laravel workbench | vendor/orchestra/testbench-core/laravel/public |
 
 ## Run Vue example
+** terminal 1 **
+vendor/bin/testbench serve
+
+** terminal 2 **
+// having issues with npm run dev. I assume it cos of the proxy. May fix later
 npm install
-npm run dev
+npm run build
+npm run preview
+
+Go to the url npm states. For me its http://localhost:5173
 
 ## Run backend php example
 composer install
