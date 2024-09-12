@@ -2,14 +2,16 @@
 
 namespace Tests\Unit;
 
-use paulmillband\cachedImageResizer\Image;
-use PhpParser\Node\Scalar\MagicConst\Dir;
-use PHPUnit\Framework\TestCase;
+use paulmillband\cachedImageResizer\App\Models\Image;
+use Tests\ImageTestImageLocations;
+use Tests\TestCase;
 
 class ImageTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
+
     private $imageClass;
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
@@ -23,22 +25,22 @@ class ImageTest extends TestCase
      */
     public function test_canCreateOriginalImageClass()
     {
-        $image = new $this->imageClass(self::IMAGE_LOCATION_JPG);
-        $this->assertEquals($image->filePath,self::IMAGE_LOCATION_JPG);
+        $image = new $this->imageClass($this->jpgModuleImagePath);
+        $this->assertEquals($image->filePath,$this->jpgModuleImagePath);
     }
 
     public function test_canGetImageType(){
-        $image = new $this->imageClass(self::IMAGE_LOCATION_JPG);
+        $image = new $this->imageClass($this->jpgModuleImagePath);
         $this->assertEquals($image->getImageType(),'image/jpeg');
     }
 
     public function testCanGetImageUrl(){
         $_SERVER['HTTPS'] = 'on';
-        $_SERVER['HTTP_HOST'] = 'dev.laravel';
+        $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['DOCUMENT_ROOT'] = realpath(__DIR__.'/../../');
-        $image = new $this->imageClass(self::IMAGE_LOCATION_JPG);
+        $image = new $this->imageClass($this->jpgModuleImagePath);
         $this->assertEquals($image->url,
-            'https://'.$_SERVER['HTTP_HOST'].'/testImages/pexels-craig-dennis-205421-400X266.jpg');
+            'https://'.$_SERVER['HTTP_HOST'].'/images/laptop-400X266.jpg');
     }
 
 }

@@ -2,14 +2,17 @@
 
 namespace Tests\Unit;
 
-use paulmillband\cachedImageResizer\ImageResizer;
-use PHPUnit\Framework\TestCase;
+use paulmillband\cachedImageResizer\App\Models\Resize\ImageResizer;
+use Tests\ImageTestImageLocations;
+use Tests\TestCase;
 use Imagick;
 
 class ImageResizerTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
+
     private $imageResizer;
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
@@ -18,49 +21,45 @@ class ImageResizerTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function test_canResizeImage()
-    {
-        $_SERVER['HTTPS'] = 'on';
-        $_SERVER['HTTP_HOST'] = 'dev.laravel';
-        $_SERVER['DOCUMENT_ROOT'] = realpath(__DIR__.'/../../');
+    /**
+     * @param string $filepath
+     * @param string $format
+     * @param int $width
+     * @param int $height
+     * @throws \ImagickException
+     */
+    protected function canResize(string $filepath, string $format, int $width, int $height){
+        $this->assertFileExists($filepath);
+        $this->assertFileIsReadable($filepath);
+        $newImageFilePath = realpath($this->cacheFolderPath).'/'.basename($filepath);
+        $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageResizer::resizeIfNeeded(
-            self::IMAGE_LOCATION_JPG,
-            realpath(__DIR__.'/../../testImages/cache'),
-            300
+            realpath($filepath),
+            $newImageFilePath,
+            $width
         );
-        $imageFilePath = realpath(__DIR__.'/../../testImages/cache').'/'.basename(self::IMAGE_LOCATION_JPG);
-        $imagick = new Imagick($imageFilePath);
-        $this->assertEquals($imagick->getImageWidth(), 300);
-        $this->assertEquals($imagick->getImageHeight(), 200);
+        $imagick = new Imagick($newImageFilePath);
+        $this->assertEquals($imagick->getImageWidth(), $width);
+        $this->assertEquals($imagick->getImageHeight(), $height);
+        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
+        $imagick->clear();
         $imagick->destroy();
     }
 
-    public function test_CanGetResizedImageUrl(){
-        $_SERVER['HTTPS'] = 'on';
-        $_SERVER['HTTP_HOST'] = 'dev.laravel';
-        $_SERVER['DOCUMENT_ROOT'] = realpath(__DIR__.'/../../');
-        $url = $this->imageResizer::resizeIfNeeded(
-            self::IMAGE_LOCATION_JPG,
-            __DIR__.'/../../testImages/cache/'
-            , 300);
-        $this->assertEquals($url,
-            'https://'.$_SERVER['HTTP_HOST'].'/testImages/cache/300/pexels-craig-dennis-205421-400X266.jpg');
-
-    }
-
-    public function test_canSwitchImageFileFormats()
+    public function test_canResizeJpgImage()
     {
-        $this->assertTrue(false);
+        $this->canResize($this->jpgModuleImagePath, 'JPEG', 300, 200);
     }
 
-    public function test_canCropImage()
+    public function test_canResizePngImage()
     {
-        $this->assertTrue(false);
+        $this->canResize($this->pngModuleImagePath, 'PNG', 300, 200);
+
     }
 
-    public function test_canReturnAnImageInAGivenAspectRatio()
+    public function test_canResizeWebpImage()
     {
-        $this->assertTrue(false);
-    }
+        $this->canResize($this->webpModuleImagePath, 'WEBP', 300, 200);
 
+    }
 }

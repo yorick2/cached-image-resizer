@@ -2,15 +2,17 @@
 
 namespace Tests\Unit;
 
-use paulmillband\cachedImageResizer\Resize;
-use PhpParser\Node\Scalar\MagicConst\Dir;
-use PHPUnit\Framework\TestCase;
+use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
+use Tests\ImageTestImageLocations;
+use Tests\TestCase;
 use Imagick;
 
 class ResizeTest extends TestCase
 {
-    const IMAGE_LOCATION_JPG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.jpg';
-    const IMAGE_LOCATION_PNG = __DIR__.'/../../testImages/pexels-craig-dennis-205421-400X266.png';
+    use ImageTestImageLocations;
+    use ImageTestSetVariablesTrait;
+    use ImageTestFilesTrait;
+
     private $imageClass;
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
@@ -19,14 +21,34 @@ class ResizeTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function test_canResizeImage()
+    protected function canResize(string $filePath, string $format, int $width, int $height)
     {
-        $this->imageClass::resize( self::IMAGE_LOCATION_JPG, __DIR__.'/../../testImages/cache/'.basename(self::IMAGE_LOCATION_JPG), 300);
-        $imageFilePath = realpath(__DIR__.'/../../testImages/cache/').'/'.basename(self::IMAGE_LOCATION_JPG);
+        $newImageFilePath = __DIR__ . '/../../public/images/cache/' .basename($filePath);
+        $this->assertFileDoesNotExist($newImageFilePath);
+        $this->imageClass::resize( $filePath, $newImageFilePath, $width);
+        $imageFilePath = realpath($this->cacheFolderPath).'/'.basename($filePath);
         $imagick = new Imagick($imageFilePath);
-        $this->assertEquals($imagick->getImageWidth(), 300);
-        $this->assertEquals($imagick->getImageHeight(), 200);
+        $this->assertEquals($imagick->getImageWidth(), $width);
+        $this->assertEquals($imagick->getImageHeight(), $height);
+        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
+        $imagick->clear();
         $imagick->destroy();
+    }
+
+    public function test_canResizeJpgImage()
+    {
+        $this->canResize($this->jpgModuleImagePath, 'JPEG', 300, 200);
+    }
+
+    public function test_canResizePngImage()
+    {
+        $this->canResize($this->pngModuleImagePath, 'PNG', 300, 200);
+    }
+
+    public function test_canResizeWebpImage()
+    {
+        $this->canResize($this->webpModuleImagePath, 'WEBP', 300, 200);
+
     }
 
 }
