@@ -91,7 +91,7 @@ import PictureComponent from '@vendor/paulmillband/cached-image-resizer/Componen
 If you have an issue there is always the simple option to create your own template from my file and use that. This also gives the option to create a more customised template.
 
 #Using the component
-Adding the component to another component.
+Adding the component vue page
 
 ```vue
 <PictureComponent
@@ -106,25 +106,25 @@ Adding the component to another component.
 />
 ```
 
-**** svg use under development ****
+For svgs allowing a fallback image of specified extension is created
 ```vue
   <PictureSvgComponent
-          alt="alt1"
-          svg="images/laptop-400X266.svg"
-          loading=""
-  />
-  <PictureSvgComponent
-          alt="alt2"
-          svg="images/laptop-400X266.svg"
-          img="images/laptop-400X266.jpg"
-          loading=""
-  />
+      alt="alt"
+      :fallbackImageHeight="0"
+      :fallbackImageWidth="400"
+      fallbackImageExtension="webp"
+      svg="laptop-400X266.svg"
+  loading=""
+    />
 ```
 
-[see some examples](./App.vue)
+[see some more examples](./App.vue)
 
 #Technical notes
 New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache"
+
+##SVGs
+Fallback image of specified extension created
 
 ##Resize
 Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale

@@ -4,19 +4,21 @@
 </script>
 
 <template>
-  <h2>SVGs</h2>
-  <PictureSvgComponent
-          alt="alt1"
-          svg="images/laptop-400X266.svg"
-          loading=""
-  />
-  <PictureSvgComponent
-          alt="alt2"
-          svg="images/laptop-400X266.svg"
-          img="images/laptop-400X266.jpg"
-  />
+
+
   <h1>Cached image resizer</h1>
   <p>New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache"</p>
+
+  <h2>SVGs</h2>
+  <p>Fallback image of specified extension created</p>
+  <PictureSvgComponent
+    alt="alt"
+    :fallbackImageHeight="0"
+    :fallbackImageWidth="400"
+    fallbackImageExtension="webp"
+    svg="laptop-400X266.svg"
+loading=""
+  />
 
   <h2>Resize</h2>
   <p>Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale</p>
