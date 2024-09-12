@@ -33,7 +33,7 @@
 
 [ico-top-language]: https://img.shields.io/github/languages/top/yorick2/cached-image-resizer?style=for-the-badge&logoColor=white
 [ico-laravel-version]: https://img.shields.io/badge/laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[ico-vue-version]: https://img.shields.io/badge/Vue%202-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white
+[ico-vue-version]: https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white
 [ico-php-version]: https://img.shields.io/badge/PHP%208.1-777BB4?style=for-the-badge&logo=php&logoColor=white
 [ico-phpunit-version]: https://img.shields.io/badge/PHPUnit-777BB4?style=for-the-badge&logoColor=white
 [ico-composer-version]: https://img.shields.io/badge/composer-885630?style=for-the-badge&logo=composer&logoColor=white
@@ -54,7 +54,9 @@ Provide one image, then the multiple images of the given sizes are created and c
 Imagick
 
 ## adding packages on Ubuntu
+```shell script
 sudo apt install php-imagick imagemagick
+```
 
 # Installation
 To tell laravel about the PMImageResizer component we have a few options. 
@@ -143,7 +145,9 @@ Resize, crop to fit size given and reformat. If one size is 0 it uses the curren
 |'image_cache_folder' | cache folder path ( relative to the public path)|
 
 # Testing
+```shell script
 vendor/bin/phpunit
+```
 
 ## useful file paths locations
 | description | file path |
@@ -152,19 +156,30 @@ vendor/bin/phpunit
 
 ## Run Vue example
 ** terminal 1 **
+```shell script
 vendor/bin/testbench serve
+```
 
 ** terminal 2 **
-// having issues with npm run dev. I assume it cos of the proxy. May fix later
+```shell script
+npm install
+npm run dev
+```
+
+or for full build testing
+```shell script
 npm install
 npm run build
 npm run preview
+```
 
 Go to the url npm states. For me its http://localhost:5173
 
 ## Run backend php example
+```shell script
 composer install
 npm run build
 vendor/bin/testbench serve
 go to http://localhost:8000 to check the server loaded ok
 go to http://localhost:8000/index.html
+```
