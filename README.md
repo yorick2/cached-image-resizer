@@ -84,7 +84,7 @@ module.exports = {
 then add the below into your .vue code inside the script tag
 
 ```js
-import PMImageResizer from '@vendor/paulmillband/cached-image-resizer/Components/Picture';
+import PictureComponent from '@vendor/paulmillband/cached-image-resizer/Components/Picture';
 ```
 
 ## Option 3: Copy the template file
@@ -94,18 +94,49 @@ If you have an issue there is always the simple option to create your own templa
 Adding the component to another component.
 
 ```vue
-<ImageResizer></ImageResizer>
+<PictureComponent
+    :shouldCrop="true"
+    extension="webp"
+    src="700x700.jpg"
+    alt="alt text"
+    :sizesAttribute="['200w', '400w', '600w']"
+    :requiredWidthSizes="['200', '400', '600']"
+    :requiredHeightSizes="['0', '0', '0']"
+    loading=""
+/>
 ```
 
+**** svg use under development ****
+```vue
+  <PictureSvgComponent
+          alt="alt1"
+          svg="images/laptop-400X266.svg"
+          loading=""
+  />
+  <PictureSvgComponent
+          alt="alt2"
+          svg="images/laptop-400X266.svg"
+          img="images/laptop-400X266.jpg"
+          loading=""
+  />
+```
+
+[see some examples](./App.vue)
+
 #Technical notes
+New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache"
+
 ##Resize
-Resize an image
+Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale
 
-##Crop
-Resize And crop to fit size given
+##Resize and Crop
+Resize and crop to fit size given. If one size is 0 it uses the current size for that axis. If -1 is used for a crop coordinate then the image is cropped centrally
 
-##Reformat
-Resize and save in a new format e.g. use a webp image and save as a jpg
+##Resize and reformat
+Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale. Then a different format image created e.g. use a jpeg image and save as a webp
+
+##Resize,crop and reformat
+Resize, crop to fit size given and reformat. If one size is 0 it uses the current size for that axis. If -1 is used for a crop coordinate then the image is cropped centrally. Then a different format image created e.g. use a jpeg image and save as a webp
 
 # Options
 ## .env

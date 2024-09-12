@@ -12,25 +12,33 @@
     import { computed } from 'vue';
 
     const props = defineProps({
-        "alt": {
-            description: "alt text",
+        "shouldCrop": {
+            description: "crop image",
+            default: false,
+            type: Boolean,
+            required: false
+        },
+        "extension": {
+            description: "new image format",
             type: String,
-            required: true
+            required: false
         },
         "src": {
             description: "fallback image file",
             type: String,
             required: true
         },
-        "img": {
-            description: "image file",
+        "alt": {
+            description: "alt text",
             type: String,
-            required: true
+            required: false
         },
         "sizesAttribute": {
             description: "size of the slot for the image on the page e.g. (min-width: 60rem) 80vw, (min-width: 40rem) 90vw, 100vw",
-            default: "320w, 800w, 1200w", // % values no allowed
-            type: String,
+            default() {
+                return ["320w", "800w", "1200w"] // % values not allowed without units (e.g. rem,vw ...)
+             },
+            type: Array,
             required: false
         },
         "requiredWidthSizes": {
@@ -56,12 +64,28 @@
             required: false
         },
     });
-    // eg. image-small.png 320w, image-medium.png 800w, image-large.png 1200w
-    // /pm-image-resizer/w/{width}/h/{height}/{img?}
     const getSrcset = computed(() => {
         let string = '';
+        if(props.shouldCrop && props.extension){
+            for (let i=0; i<props.requiredWidthSizes.length; i++){
+                string += '/pm-image-resizer/cropped/converted/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.src+'.'+props.extension + ' ' + props.sizesAttribute[i]+" ,";
+            }
+            return string;
+        }
+        if(props.extension){
+            for (let i=0; i<props.requiredWidthSizes.length; i++){
+                string += '/pm-image-resizer/converted/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.src+'.'+props.extension + ' ' + props.sizesAttribute[i]+" ,";
+            }
+            return string;
+        }
+        if(props.shouldCrop){
+            for (let i=0; i<props.requiredWidthSizes.length; i++){
+                string += '/pm-image-resizer/cropped/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.src + ' ' + props.sizesAttribute[i]+" ,";
+            }
+            return string;
+        }
         for (let i=0; i<props.requiredWidthSizes.length; i++){
-            string += '/pm-image-resizer/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.img + ' ' + props.requiredWidthSizes[i]+"w ,";
+            string += '/pm-image-resizer/w/'+props.requiredWidthSizes[i]+'/h/'+props.requiredHeightSizes[i]+'/'+props.src + ' ' + props.sizesAttribute[i]+" ,";
         }
         return string;
     });

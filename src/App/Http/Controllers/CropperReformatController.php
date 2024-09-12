@@ -4,6 +4,8 @@ namespace paulmillband\cachedImageResizer\App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use paulmillband\cachedImageResizer\App\Models\Crop\CropperReformatCache;
 use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
+use paulmillband\cachedImageResizer\App\Models\Helper\ImageFormats;
+use paulmillband\cachedImageResizer\App\Models\Reformat\ImageReformater;
 
 class CropperReformatController extends Controller
 {
@@ -15,29 +17,25 @@ class CropperReformatController extends Controller
     }
 
     /**
-     * @param string $format
+     * @param string $imgPath
+     * @param string $extension
      * @param int $width
      * @param int $height
-     * @param string $imgCode
-     * @param string $extension
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ImagickException
      */
     protected function resizeCropAndReformat(
-        string $format,
         int $width,
         int $height,
-        string $imgCode,
+        string $imgPath,
         string $extension
     ){
-        $newPath = $this->resizeCacheClass->newFilePath($imgCode, $format, $extension, $width, $height);
-        $img = preg_replace('/-([a-zA-Z]*)$/','.$1', $imgCode);
+        $format = strtoupper($extension);
+        $newPath = $this->resizeCacheClass->newFilePath($imgPath, $format, $extension, $width, $height);
         ImageCropper::resizeAndCropIfNeeded(
-            public_path('images/'.$img),
+            public_path('images/'.$imgPath),
             $newPath,
             $format,
-            -1,
-            -1,
             $width,
             $height
         );

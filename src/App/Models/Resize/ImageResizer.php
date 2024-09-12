@@ -8,8 +8,8 @@ class ImageResizer
     /**
      * @param string $imageFilePath
      * @param string $newPath
-     * @param int $width set to 0 to automaticall calculate
-     * @param int $height set to 0 to automaticall calculate
+     * @param int $width set to 0 to automatically calculate
+     * @param int $height set to 0 to automatically calculate
      * @param int $filterType
      * @param float $blur The blur factor where > 1 is blurry, < 1 is sharp
      * @param bool $bestFit

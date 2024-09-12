@@ -10,6 +10,7 @@ class ResizeCache
     public function __construct()
     {
         $this->cacheFolderPath = ImageCacheFolderPath::getImageCacheFolderPath();
+        $this->cacheFolderRelativePath = ImageCacheFolderPath::getRelativeImageCacheFolderPath();
     }
 
     /**
@@ -28,4 +29,5 @@ class ResizeCache
         }
         return $this->cacheFolderPath.'/width/'.$width.'/height/'.$height.'/'.$imgPath;
     }
+
 }

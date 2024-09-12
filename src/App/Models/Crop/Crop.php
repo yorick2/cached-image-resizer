@@ -9,10 +9,11 @@ class Crop
     /**
      * @param string $imageFilePath
      * @param string $resizedFilePath
-     * @param int $xCoordinate The X coordinate of the cropped region's top left corner or -1 for center
-     * @param int $yCoordinate The Y coordinate of the cropped region's top left corner or -1 for center
-     * @param int $width set to 0 to automatically calculate
-     * @param int $height set to 0 to automatically calculate
+     * @param string $requiredFileType
+     * @param int $xCoordinate
+     * @param int $yCoordinate
+     * @param int $width
+     * @param int $height
      * @param int $filterType
      * @param float $blur
      * @param bool $bestFit
@@ -42,24 +43,18 @@ class Crop
         if($height == 0){
             $height = $imagick->getImageHeight();
         }
-        $resizeHeight = Resize::getResizedHeight($imagick, $width);
-        if($resizeHeight >= $height){
-            $resizeWidth = $width;
-        }else{
-            $resizeWidth = Resize::getResizedWidth($imagick, $height);
-            $resizeHeight = $height;
-        }
+        $resizeDimensions = self::getDimensionsToCreateResizeImageBeforeItsCropped($imagick, $width, $height);
         if($xCoordinate==-1){
-            $xCoordinate=self::getCoordinateForCentredImage($resizeWidth, $width);
+            $xCoordinate=self::getCoordinateForCentredImage($resizeDimensions['w'], $width);
         }
         if($yCoordinate==-1){
-            $yCoordinate=self::getCoordinateForCentredImage($resizeHeight, $height);
+            $yCoordinate=self::getCoordinateForCentredImage($resizeDimensions['h'], $height);
         }
         self::resizeAndCropAction(
             $imagick,
             $requiredFileType,
-            $resizeWidth,
-            $resizeHeight,
+            $resizeDimensions['w'],
+            $resizeDimensions['h'],
             $resizedFilePath,
             $xCoordinate,
             $yCoordinate,
@@ -70,6 +65,26 @@ class Crop
             $bestFit
         );
         return true;
+    }
+
+    /**
+     * @param Imagick $imagick
+     * @param int $width
+     * @param int $height
+     * @return array
+     */
+    private static function getDimensionsToCreateResizeImageBeforeItsCropped(Imagick $imagick, int $width, int $height){
+        $resizeHeight = Resize::getResizedHeight($imagick, $width);
+        if($resizeHeight >= $height){
+            $resizeWidth = $width;
+        }else{
+            $resizeWidth = Resize::getResizedWidth($imagick, $height);
+            $resizeHeight = $height;
+        }
+        return [
+            'h'=>$resizeHeight,
+            'w'=>$resizeWidth
+        ];
     }
 
     /**

@@ -5,31 +5,31 @@ use paulmillband\cachedImageResizer\App\Http\Controllers\CropperReformatControll
 use paulmillband\cachedImageResizer\App\Http\Controllers\ReformaterController;
 use paulmillband\cachedImageResizer\App\Http\Controllers\ResizerController;
 
-Route::get('/pm-image-resizer/w/{width}/h/{height}/{img?}',
+Route::get('/pm-image-resizer/w/{width}/h/{height}/{imgPath}',
     [ResizerController::class, 'resize']
 )
     ->name('pm-image-resizer')
-    ->where('img', '(.*)');
+    ->where('imgPath', '.*');
 
 Route::get(
-    '/pm-image-resizer/converted/{format}/w/{width}/h/{height}/{imgcode}.{extension?}',
+    '/pm-image-resizer/converted/w/{width}/h/{height}/{imgPath}.{extension}',
     [ReformaterController::class, 'resizeAndReformat']
 )
     ->name('pm-image-converter')
-    ->where('imgcode', '([^.]*)');
+    ->where('imgPath', '.*');
 
 Route::get(
-    '/pm-image-resizer/cropped/w/{width}/h/{height}/{img?}',
+    '/pm-image-resizer/cropped/w/{width}/h/{height}/{imgPath}',
     [CropperController::class, 'resizeAndCrop']
 )
     ->name('pm-image-cropper')
-    ->where('img', '(.*)');
+    ->where('imgPath', '.*');
 
 Route::get(
-    '/pm-image-resizer/cropped/converted/{format}/w/{width}/h/{height}/{imgcode}.{extension?}',
+    '/pm-image-resizer/cropped/converted/w/{width}/h/{height}/{imgPath}.{extension}',
     [CropperReformatController::class, 'resizeCropAndReformat']
 )
     ->name('pm-image-cropper-converter')
-    ->where('imgcode', '([^.]*)');
+    ->where('imgPath','.*');
 
 
