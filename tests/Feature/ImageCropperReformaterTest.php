@@ -13,6 +13,7 @@ class ImageCropperReformaterTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsTrait;
 
     private $cropperReformatCache;
 
@@ -29,41 +30,56 @@ class ImageCropperReformaterTest extends TestCase
         );
     }
 
+    /**
+     * @param string $originalFilePath
+     * @param string $newFormat
+     * @param string $newFileExtension
+     * @param int $width
+     * @param int $height
+     * @param bool $fileShouldAlreadyExist
+     * @return string new file path
+     * @throws \ImagickException
+     */
     protected function canCropAndConvertImageFileFormats(
         string $originalFilePath,
         string $newFormat,
         string $newFileExtension,
         int $width=0,
-        int $height=0
+        int $height=0,
+        bool $fileShouldAlreadyExist=false
     ){
         $originalFileRelativePath = str_replace(public_path('images').'/','',$originalFilePath);
-        $newImageFilePath = $this->cropperReformatCache->newFilePath($originalFileRelativePath, ImageFormats::getImageFormatFromExtension($newFileExtension), $newFileExtension, $width, $height);
-        $this->assertFileDoesNotExist($newImageFilePath);
-        $response = $this->get(route('pm-image-cropper-converter', [
+        $newImageFilePath = $this->cropperReformatCache->newFilePath(
+            $originalFileRelativePath,
+            ImageFormats::getImageFormatFromExtension($newFileExtension),
+            $newFileExtension,
+            $width,
+            $height
+        );
+        $route = route('pm-image-cropper-converter', [
             'width' => $width,
             'height' => $height,
             'imgPath' => $originalFileRelativePath,
             'extension' => $newFileExtension
-        ]));
-        $response->assertStatus( 200);
-        sleep(0.5);
-        $this->assertFileExists($newImageFilePath);
-
+        ]);
         $oldImagick = new Imagick($originalFilePath);
-        $newImagick = new Imagick($newImageFilePath);
         if($width==0){
             $width = $oldImagick->getImageWidth();
         }
         if($height==0){
             $height = $oldImagick->getImageHeight();
         }
-        $this->assertEquals($newImagick->getImageWidth(), $width);
-        $this->assertEquals($newImagick->getImageHeight(), $height);
-        $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
         $oldImagick->clear();
         $oldImagick->destroy();
-        $newImagick->clear();
-        $newImagick->destroy();
+        $this->ImageCreationSuccess(
+            $route,
+            $newImageFilePath,
+            $newFormat,
+            $width,
+            $height,
+            $fileShouldAlreadyExist
+        );
+        return $newImageFilePath;
     }
 
     public function test_canConvertImageFileFormatsFromSvgToJpg()
@@ -110,4 +126,30 @@ class ImageCropperReformaterTest extends TestCase
         );
     }
 
+    public function test_canUseImageCacheConvertedFromSvgToJpg()
+    {
+        $filePath1 = $this->canCropAndConvertImageFileFormats(
+            $this->svgLaravelImagePath,
+            'JPEG',
+            'jpg',
+            200,
+            133
+        );
+        sleep(2);
+        $secondRequestTime = time();
+        $filePath2 = $this->canCropAndConvertImageFileFormats(
+            $this->svgLaravelImagePath,
+            'JPEG',
+            'jpg',
+            200,
+            133,
+            true
+        );
+        $this->assertEquals($filePath1, $filePath2);
+        clearstatcache();
+        $this->assertTrue(
+            filemtime($filePath2) < $secondRequestTime-1,
+            'file recreated, cache file not used'
+        );
+    }
 }

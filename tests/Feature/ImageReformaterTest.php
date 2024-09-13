@@ -7,6 +7,7 @@ use paulmillband\cachedImageResizer\App\Models\Helper\ImageFormats;
 use paulmillband\cachedImageResizer\App\Models\Reformat\ReformatCache;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
+
 use Imagick;
 
 class ImageReformaterTest extends TestCase
@@ -14,6 +15,7 @@ class ImageReformaterTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsTrait;
 
     private $reformatCacheClass;
 
@@ -27,43 +29,57 @@ class ImageReformaterTest extends TestCase
         $this->setUpImages($this->{$this->imageFileType.'ModuleImagePath'}, $this->laravelImageFolder.'/'.$this->{$this->imageFileType.'ImageSubPath'});
     }
 
+    /**
+     * @param string $originalFilePath
+     * @param string $newFormat
+     * @param string $newFileExtension
+     * @param int $width
+     * @param int $height
+     * @param bool $fileShouldAlreadyExist
+     * @return string filepath of created file
+     * @throws \ImagickException
+     */
     protected function canConvertImageFileFormats(
         string $originalFilePath,
         string $newFormat,
         string $newFileExtension,
         int $width=0,
-        int $height=0
+        int $height=0,
+        bool $fileShouldAlreadyExist=false
     ){
-        $originalFileRelativePath = str_replace(public_path('images'),'',$originalFilePath);
-        $newImageFilePath = $this->reformatCacheClass->newFilePath($originalFileRelativePath, ImageFormats::getImageFormatFromExtension($newFileExtension), $newFileExtension, $width, $height);
-        $this->assertFileDoesNotExist($newImageFilePath);
-        $response = $this->get(route('pm-image-converter', [
+        $originalFileRelativePath = str_replace(public_path('images').'/','',$originalFilePath);
+        $newImageFilePath = $this->reformatCacheClass->newFilePath(
+            $originalFileRelativePath,
+            ImageFormats::getImageFormatFromExtension($newFileExtension),
+            $newFileExtension,
+            $width,
+            $height
+        );
+        $route = route('pm-image-converter', [
             'width' => $width,
             'height' => $height,
             'imgPath' => $originalFileRelativePath,
             'extension' => $newFileExtension
-        ]));
-        $response->assertStatus( 200);
-        sleep(0.5);
-        $this->assertFileExists($newImageFilePath);
-
+        ]);
         $oldImagick = new Imagick($originalFilePath);
-        $newImagick = new Imagick($newImageFilePath);
         if($width==0){
             $width = $oldImagick->getImageWidth();
         }
         if($height==0){
             $height = $oldImagick->getImageHeight();
         }
-        $this->assertEquals($newImagick->getImageWidth(), $width);
-        $this->assertEquals($newImagick->getImageHeight(), $height);
-        $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
         $oldImagick->clear();
         $oldImagick->destroy();
-        $newImagick->clear();
-        $newImagick->destroy();
+        $this->ImageCreationSuccess(
+            $route,
+            $newImageFilePath,
+            $newFormat,
+            $width,
+            $height,
+            $fileShouldAlreadyExist
+        );
+        return $newImageFilePath;
     }
-
 
     public function test_canConvertImageFileFormatsFromWebpToJpg()
     {
@@ -110,8 +126,8 @@ class ImageReformaterTest extends TestCase
     {
         $this->canConvertImageFileFormats(
             $this->svgLaravelImagePath,
-            'PNG',
-            'png',
+            'WEBP',
+            'webp',
             200,
             133
         );
@@ -128,4 +144,28 @@ class ImageReformaterTest extends TestCase
         );
     }
 
+    public function test_canUseImageCacheConvertedFromWebpToJpg()
+    {
+        $filePath1 = $this->canConvertImageFileFormats(
+            $this->webpLaravelImagePath,
+            'JPEG',
+            'jpg'
+        );
+        sleep(2);
+        $secondRequestTime = time();
+        $filePath2 = $this->canConvertImageFileFormats(
+            $this->webpLaravelImagePath,
+            'JPEG',
+            'jpg',
+            0,
+            0,
+            true
+        );
+        $this->assertEquals($filePath1, $filePath2);
+        clearstatcache();
+        $this->assertTrue(
+            filemtime($filePath2) < $secondRequestTime-1,
+            'file recreated, cache file not used'
+        );
+    }
 }
