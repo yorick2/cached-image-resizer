@@ -56,7 +56,7 @@ class ImageResizerTest extends TestCase
         $response = $this->get(route('pm-image-resizer', [
             'width' => $width,
             'height' => $height,
-            'img' => $imagePath
+            'imgPath' => $imagePath
         ]));
         $response->assertStatus( 200);
         $this->assertFileExists($cachedImagePath);

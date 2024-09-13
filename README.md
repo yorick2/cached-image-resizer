@@ -157,6 +157,7 @@ vendor/bin/phpunit
 ## Run Vue example
 ** terminal 1 **
 ```shell script
+composer install
 vendor/bin/testbench serve
 ```
 

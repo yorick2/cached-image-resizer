@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\URL;
+use paulmillband\cachedImageResizer\App\Models\Helper\ImageFormats;
 use paulmillband\cachedImageResizer\App\Models\Reformat\ReformatCache;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
@@ -34,17 +35,16 @@ class ImageReformaterTest extends TestCase
         int $height=0
     ){
         $originalFileRelativePath = str_replace(public_path('images'),'',$originalFilePath);
-        $imgCode = str_replace('.','-', $originalFileRelativePath);
-        $newImageFilePath = $this->reformatCacheClass->newFilePath($imgCode, $newFormat, $newFileExtension, $width, $height);
+        $newImageFilePath = $this->reformatCacheClass->newFilePath($originalFileRelativePath, ImageFormats::getImageFormatFromExtension($newFileExtension), $newFileExtension, $width, $height);
         $this->assertFileDoesNotExist($newImageFilePath);
         $response = $this->get(route('pm-image-converter', [
-            'format' => $newFormat,
             'width' => $width,
             'height' => $height,
-            'imgcode' => $imgCode,
+            'imgPath' => $originalFileRelativePath,
             'extension' => $newFileExtension
         ]));
         $response->assertStatus( 200);
+        sleep(0.5);
         $this->assertFileExists($newImageFilePath);
 
         $oldImagick = new Imagick($originalFilePath);

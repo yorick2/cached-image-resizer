@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use paulmillband\cachedImageResizer\App\Models\Crop\CropperReformatCache;
+use paulmillband\cachedImageResizer\App\Models\Helper\ImageFormats;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
 use Imagick;
@@ -35,18 +36,17 @@ class ImageCropperReformaterTest extends TestCase
         int $width=0,
         int $height=0
     ){
-        $originalFileRelativePath = str_replace(public_path('images'),'',$originalFilePath);
-        $imgCode = str_replace('.','-', $originalFileRelativePath);
-        $newImageFilePath = $this->cropperReformatCache->newFilePath($imgCode, $newFormat, $newFileExtension, $width, $height);
+        $originalFileRelativePath = str_replace(public_path('images').'/','',$originalFilePath);
+        $newImageFilePath = $this->cropperReformatCache->newFilePath($originalFileRelativePath, ImageFormats::getImageFormatFromExtension($newFileExtension), $newFileExtension, $width, $height);
         $this->assertFileDoesNotExist($newImageFilePath);
         $response = $this->get(route('pm-image-cropper-converter', [
-            'format' => $newFormat,
             'width' => $width,
             'height' => $height,
-            'imgcode' => $imgCode,
+            'imgPath' => $originalFileRelativePath,
             'extension' => $newFileExtension
         ]));
         $response->assertStatus( 200);
+        sleep(0.5);
         $this->assertFileExists($newImageFilePath);
 
         $oldImagick = new Imagick($originalFilePath);

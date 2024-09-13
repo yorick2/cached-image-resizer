@@ -47,6 +47,7 @@ loading=""
     <p>Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale. Then a different format image created e.g. use a jpeg image and save as a webp</p>
     <PictureComponent
         src="700x700.jpg"
+        extension="webp"
         alt="alt text 3"
         :sizesAttribute="['200w', '400w', '600w']"
         :requiredWidthSizes="['200', '400', '600']"

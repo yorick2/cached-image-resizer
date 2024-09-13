@@ -55,7 +55,7 @@ class ImageCropperTest extends TestCase
         $response = $this->get(route('pm-image-cropper', [
                 'width' => $width,
                 'height' => $height,
-                'img' => $imagePath
+                'imgPath' => $imagePath
             ]));
         $response->assertStatus( 200);
         $this->assertFileExists($newImageFilePath);

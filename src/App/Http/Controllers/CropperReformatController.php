@@ -30,7 +30,7 @@ class CropperReformatController extends Controller
         string $imgPath,
         string $extension
     ){
-        $format = strtoupper($extension);
+        $format = ImageFormats::getImageFormatFromExtension($extension);
         $newPath = $this->resizeCacheClass->newFilePath($imgPath, $format, $extension, $width, $height);
         ImageCropper::resizeAndCropIfNeeded(
             public_path('images/'.$imgPath),
