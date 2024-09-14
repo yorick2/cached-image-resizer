@@ -1,5 +1,3 @@
-![Under Construction][ico-under-construction]
-
 [![License][ico-license]](LICENSE.md)
 ![Release][ico-in-development]
 ![Release][ico-release]
@@ -19,8 +17,6 @@
 ![HTML version][ico-html-version]
 ![CSS version][ico-css-version]
 ![Javascript][ico-js-version]
-
-[ico-under-construction]: https://img.shields.io/badge/UNDER%20CONSTRUCTION!-red?style=for-the-badge
 
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge
 [ico-in-development]: https://img.shields.io/badge/Release-Development-yellow?style=for-the-badge
@@ -123,7 +119,10 @@ For svgs allowing a fallback image of specified extension is created
 [see some more examples](./App.vue)
 
 #Technical notes
-New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache"
+New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache".
+
+## The cache
+The cache folder isn't cleared automatically and cached files needs to be removed after changes to the original file for them to be seen. If there is an issue a new file using a cached image after all cached files have been removed I would suggest removing the **contents** of the cache folder and ensure all server/cdn caching is refreshed.
 
 ##SVGs
 Fallback image of specified extension created
