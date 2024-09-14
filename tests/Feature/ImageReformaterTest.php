@@ -70,7 +70,7 @@ class ImageReformaterTest extends TestCase
         }
         $oldImagick->clear();
         $oldImagick->destroy();
-        $this->ImageCreationSuccess(
+        $this->ImageCreationGetRequestSuccess(
             $route,
             $newImageFilePath,
             $newFormat,

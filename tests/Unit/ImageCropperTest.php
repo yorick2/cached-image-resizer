@@ -5,13 +5,14 @@ namespace Tests\Unit;
 use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
-use Imagick;
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 
 class ImageCropperTest extends TestCase
 {
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsHelperTrait;
     private $imageCropper;
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
@@ -25,6 +26,7 @@ class ImageCropperTest extends TestCase
      * @param string $format
      * @param int $width
      * @param int $height
+     * @return string new file path
      * @throws \ImagickException
      */
     protected function canCrop(string $filepath, string $format, int $width, int $height=0){
@@ -41,16 +43,8 @@ class ImageCropperTest extends TestCase
             $width,
             $height
         );
-        $imagick = new Imagick($newImageFilePath);
-        if($width){
-            $this->assertEquals($imagick->getImageWidth(), $width);
-        }
-        if($height){
-            $this->assertEquals($imagick->getImageHeight(), $height);
-        }
-        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
-        $imagick->clear();
-        $imagick->destroy();
+        $this->ImageCreationSuccess($newImageFilePath, $format, $width, $height);
+        return $newImageFilePath;
     }
 
     public function test_canCropJpgImage()

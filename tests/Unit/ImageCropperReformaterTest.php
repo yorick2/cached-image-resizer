@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use paulmillband\cachedImageResizer\App\Models\Crop\ImageCropper;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 use Imagick;
 
 class ImageCropperReformaterTest extends TestCase
@@ -12,6 +13,7 @@ class ImageCropperReformaterTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsHelperTrait;
     private $imageCropper;
 
     public function __construct(string $name = null, array $data = [], $dataName = '')
@@ -25,6 +27,8 @@ class ImageCropperReformaterTest extends TestCase
      * @param string $format
      * @param int $width
      * @param int $height
+     * @param string $newFileExtension
+     * @return string new file path
      * @throws \ImagickException
      */
     protected function canCropAndReformat(string $filepath, string $format, int $width, int $height, string $newFileExtension){
@@ -42,16 +46,8 @@ class ImageCropperReformaterTest extends TestCase
             $width,
             $height
         );
-        $imagick = new Imagick($newImageFilePath);
-        if($width){
-            $this->assertEquals($imagick->getImageWidth(), $width);
-        }
-        if($height){
-            $this->assertEquals($imagick->getImageHeight(), $height);
-        }
-        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
-        $imagick->clear();
-        $imagick->destroy();
+        $this->ImageCreationSuccess($newImageFilePath, $format, $width, $height);
+        return $newImageFilePath;
     }
 
     public function test_canCropWebpIntoJPGImage()

@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 use Imagick;
 
 trait ImageTestsTrait
 {
+    use ImageTestsHelperTrait;
 
-    public function ImageCreationSuccess(
+    public function ImageCreationGetRequestSuccess(
         string $route,
         string $newImageFilePath,
         string $newFormat,
@@ -22,20 +24,12 @@ trait ImageTestsTrait
         }
         $response = $this->get($route);
         $response->assertStatus(200);
-        $this->assertFileExists($newImageFilePath);
-        $newImagick = new Imagick($newImageFilePath);
-        if($width){
-            $this->assertEquals($newImagick->getImageWidth(), $width);
-        }
-        if($height){
-            $this->assertEquals($newImagick->getImageHeight(), $height);
-        }
-        $this->assertTrue(
-            $newImagick->getImageFormat() === $newFormat,
-            'cached image isn\'t a '.$newFormat
+        $this->ImageCreationSuccess(
+            $newImageFilePath,
+            $newFormat,
+            $width,
+            $height
         );
-        $newImagick->clear();
-        $newImagick->destroy();
     }
 
 }

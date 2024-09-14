@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 use Imagick;
 
 class ResizeTest extends TestCase
@@ -12,6 +13,7 @@ class ResizeTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsHelperTrait;
 
     private $imageClass;
 
@@ -21,18 +23,21 @@ class ResizeTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
+    /**
+     * @param string $filePath
+     * @param string $format
+     * @param int $width
+     * @param int $height
+     * @return string new image file path
+     * @throws \ImagickException
+     */
     protected function canResize(string $filePath, string $format, int $width, int $height)
     {
         $newImageFilePath = __DIR__ . '/../../public/images/cache/' .basename($filePath);
         $this->assertFileDoesNotExist($newImageFilePath);
         $this->imageClass::resize( $filePath, $newImageFilePath, $width);
-        $imageFilePath = realpath($this->cacheFolderPath).'/'.basename($filePath);
-        $imagick = new Imagick($imageFilePath);
-        $this->assertEquals($imagick->getImageWidth(), $width);
-        $this->assertEquals($imagick->getImageHeight(), $height);
-        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
-        $imagick->clear();
-        $imagick->destroy();
+        $this->ImageCreationSuccess($newImageFilePath, $format, $width, $height);
+        return $newImageFilePath;
     }
 
     public function test_canResizeJpgImage()

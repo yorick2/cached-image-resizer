@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use paulmillband\cachedImageResizer\App\Models\Reformat\ImageReformater;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 use Imagick;
 
 class ImageReformaterTest extends TestCase
@@ -12,6 +13,7 @@ class ImageReformaterTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsHelperTrait;
 
     private $imageReformater;
 
@@ -49,18 +51,14 @@ class ImageReformaterTest extends TestCase
             $height
         );
         $oldImagick = new Imagick($originalFile);
-        $newImagick = new Imagick($newImageFilePath);
         if($width==0){
             $width = $oldImagick->getImageWidth();
         }
         if($height==0){
             $height = $oldImagick->getImageHeight();
         }
-        $this->assertEquals($newImagick->getImageWidth(), $width);
-        $this->assertEquals($newImagick->getImageHeight(), $height);
-        $this->assertTrue($newImagick->getImageFormat() === $newFormat, 'cached image isn\'t a '.$newFormat);
-        $newImagick->clear();
-        $newImagick->destroy();
+        $this->ImageCreationSuccess($newImageFilePath, $newFormat, $width, $height);
+        return $newImageFilePath;
     }
 
     public function test_canConvertImageFileFormatsFromWebpToJpg()

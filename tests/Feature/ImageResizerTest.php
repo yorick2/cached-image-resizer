@@ -57,7 +57,7 @@ class ImageResizerTest extends TestCase
     ) {
         $imagePath = '/'.ltrim($imagePath, '/');
         $newImageFilePath = $this->resizeCacheClass->newFilePath($width, $height, $imagePath);
-        $this->ImageCreationSuccess(
+        $this->ImageCreationGetRequestSuccess(
             route('pm-image-resizer', [
                 'width' => $width,
                 'height' => $height,

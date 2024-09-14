@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use paulmillband\cachedImageResizer\App\Models\Resize\ImageResizer;
 use Tests\ImageTestImageLocations;
 use Tests\TestCase;
+use Tests\Helper\ImageTestsTrait as ImageTestsHelperTrait;
 use Imagick;
 
 class ImageResizerTest extends TestCase
@@ -12,6 +13,7 @@ class ImageResizerTest extends TestCase
     use ImageTestImageLocations;
     use ImageTestSetVariablesTrait;
     use ImageTestFilesTrait;
+    use ImageTestsHelperTrait;
 
     private $imageResizer;
 
@@ -26,6 +28,7 @@ class ImageResizerTest extends TestCase
      * @param string $format
      * @param int $width
      * @param int $height
+     * @return string new file path
      * @throws \ImagickException
      */
     protected function canResize(string $filepath, string $format, int $width, int $height){
@@ -38,12 +41,8 @@ class ImageResizerTest extends TestCase
             $newImageFilePath,
             $width
         );
-        $imagick = new Imagick($newImageFilePath);
-        $this->assertEquals($imagick->getImageWidth(), $width);
-        $this->assertEquals($imagick->getImageHeight(), $height);
-        $this->assertTrue($imagick->getImageFormat() === $format, 'cached image isn\'t a '.$format);
-        $imagick->clear();
-        $imagick->destroy();
+        $this->ImageCreationSuccess($newImageFilePath, $format, $width, $height);
+        return $newImageFilePath;
     }
 
     public function test_canResizeJpgImage()

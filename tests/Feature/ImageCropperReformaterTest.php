@@ -56,12 +56,6 @@ class ImageCropperReformaterTest extends TestCase
             $width,
             $height
         );
-        $route = route('pm-image-cropper-converter', [
-            'width' => $width,
-            'height' => $height,
-            'imgPath' => $originalFileRelativePath,
-            'extension' => $newFileExtension
-        ]);
         $oldImagick = new Imagick($originalFilePath);
         if($width==0){
             $width = $oldImagick->getImageWidth();
@@ -71,8 +65,13 @@ class ImageCropperReformaterTest extends TestCase
         }
         $oldImagick->clear();
         $oldImagick->destroy();
-        $this->ImageCreationSuccess(
-            $route,
+        $this->ImageCreationGetRequestSuccess(
+            route('pm-image-cropper-converter', [
+                'width' => $width,
+                'height' => $height,
+                'imgPath' => $originalFileRelativePath,
+                'extension' => $newFileExtension
+            ]),
             $newImageFilePath,
             $newFormat,
             $width,

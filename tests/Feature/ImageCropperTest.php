@@ -59,7 +59,7 @@ class ImageCropperTest extends TestCase
     ){
         $imagePath = '/'.ltrim($imagePath, '/');
         $newImageFilePath = $this->CropperCacheClass->newFilePath($width, $height, $imagePath);
-        $this->ImageCreationSuccess(
+        $this->ImageCreationGetRequestSuccess(
             route('pm-image-cropper', [
                 'width' => $width,
                 'height' => $height,
