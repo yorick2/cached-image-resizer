@@ -2,7 +2,7 @@
 ![Release][ico-in-development]
 ![Release][ico-release]
 ![Release][ico-tag]
-![Download Size][ico-download-size]
+![Download Size][ico-downloadree/master?tab=readme-ov-file-size]
 ![Last Commit][ico-last-commit]
 
 ![UNIT TESTS][ico-unit-tests]
@@ -37,19 +37,49 @@
 [ico-css-version]: https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
 [ico-js-version]: https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white
 
-# Funding
-Thank you for any donations 
+[<img src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif">](https://www.paypal.com/donate/?hosted_button_id=95TTM4Z9Q7MNG)
+-----------------------------
+Cached Image Resizer
+=============================
+- [Cached Image Resizer](#cached-image-resizer)
+- [PHP packages needed](#php-packages-needed)
+    - [Adding packages on Ubuntu](#adding-packages-on-ubuntu)
+- [Installation](#installation)
+    - [Option 1: Update the app.js file](#option-1-update-the-appjs-file)
+    - [Option 2: Using the vue component direct from the vendor folder](#option-2-using-the-vue-component-direct-from-the-vendor-folder)
+    - [Option 3: Copy the template file](#option-3-copy-the-template-file)
+- [Using the component](#using-the-component)
+- [Technical notes](#technical-notes)
+    - [The cache](#the-cache)
+    - [SVGs](#svgs)
+    - [Resize](#resize)
+    - [Resize and Crop](#resize-and-crop)
+    - [Resize and reformat](#resize-and-reformat)
+    - [Resize, crop and reformat](#resize-crop-and-reformat)
+- [Options](#options)
+    - [.env](#env)
+- [Testing](#testing)
+    - [Useful file paths locations](#useful-file-paths-locations)
+    - [Run Vue example](#run-vue-example)
+        - [Run backend php example](#run-backend-php-example)
 
-## Paypal
-https://www.paypal.com/donate/?hosted_button_id=95TTM4Z9Q7MNG
 
-# cached-image-resizer
+----------------------------------
+> # Don't forget to show me some of that geek love
+> Star, watch or even buy me a pint
+> >
+> ![Dont forget to like](https://media.giphy.com/media/yY7WUGbcR1mwyyXYo7/giphy.gif?cid=ecf05e47ednd6ek1pfb8qxycwmno2ii1vypojlpslnkwg8zd&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+>
+
+
+# Cached Image Resizer
+
 Provide one image, then the multiple images of the given sizes are created and cached. Then placed in our picture element component providing the best image for the end users device. 
 
 # PHP packages needed
 Imagick
 
-## adding packages on Ubuntu
+## Adding packages on Ubuntu
 ```shell script
 sudo apt install php-imagick imagemagick
 ```
@@ -57,14 +87,14 @@ sudo apt install php-imagick imagemagick
 # Installation
 To tell laravel about the PMImageResizer component we have a few options. 
  
-## Option 1: 
+## Option 1: Update the app.js file
 add the below code to your `resources/js/app.js`
 ```js
 import PMImageResizer from '../../vendor/paulmillband/cached-image-resizer/Components/Picture';
 Vue.component("PMImageResizer", PMImageResizer);
 ```
 
-## Option 2: using the vue component direct from the vendor folder
+## Option 2: Using the vue component direct from the vendor folder
 add ``'@vendor': path.resolve('vendor'),`` to the aliases array in file `/webpack.config.js`
 
 e.g.
@@ -88,7 +118,7 @@ import PictureComponent from '@vendor/paulmillband/cached-image-resizer/Componen
 ## Option 3: Copy the template file
 If you have an issue there is always the simple option to create your own template from my file and use that. This also gives the option to create a more customised template.
 
-#Using the component
+# Using the component
 Adding the component vue page
 
 ```vue
@@ -118,25 +148,25 @@ For svgs allowing a fallback image of specified extension is created
 
 [see some more examples](./App.vue)
 
-#Technical notes
+# Technical notes
 New image created with the given specification if, its been previously created and found in the cache folder "public/images/cache".
 
 ## The cache
 The cache folder isn't cleared automatically and cached files needs to be removed after changes to the original file for them to be seen. If there is an issue a new file using a cached image after all cached files have been removed I would suggest removing the **contents** of the cache folder and ensure all server/cdn caching is refreshed.
 
-##SVGs
+## SVGs
 Fallback image of specified extension created
 
-##Resize
+## Resize
 Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale
 
-##Resize and Crop
+## Resize and Crop
 Resize and crop to fit size given. If one size is 0 it uses the current size for that axis. If -1 is used for a crop coordinate then the image is cropped centrally
 
-##Resize and reformat
+## Resize and reformat
 Resize the image to the exact dimensions given, unless 0 is given where that measurement is calculated to scale. Then a different format image created e.g. use a jpeg image and save as a webp
 
-##Resize,crop and reformat
+## Resize, crop and reformat
 Resize, crop to fit size given and reformat. If one size is 0 it uses the current size for that axis. If -1 is used for a crop coordinate then the image is cropped centrally. Then a different format image created e.g. use a jpeg image and save as a webp
 
 # Options
@@ -148,19 +178,19 @@ Resize, crop to fit size given and reformat. If one size is 0 it uses the curren
 vendor/bin/phpunit
 ```
 
-## useful file paths locations
+## Useful file paths locations
 | description | file path |
 | -------- | ------- |
 | public path in vite laravel workbench | vendor/orchestra/testbench-core/laravel/public |
 
 ## Run Vue example
-** terminal 1 **
+**Terminal 1**
 ```shell script
 composer install
 vendor/bin/testbench serve
 ```
 
-** terminal 2 **
+**Terminal 2**
 ```shell script
 npm install
 npm run dev
