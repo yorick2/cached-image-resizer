@@ -2,7 +2,7 @@
 ![Release][ico-in-development]
 ![Release][ico-release]
 ![Release][ico-tag]
-![Download Size][ico-downloadree/master?tab=readme-ov-file-size]
+![Download Size][ico-download-size]
 ![Last Commit][ico-last-commit]
 
 ![UNIT TESTS][ico-unit-tests]
