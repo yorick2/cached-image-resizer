@@ -14,7 +14,7 @@
     const props = defineProps({
         "shouldCrop": {
             description: "crop image",
-            default: false,
+            default: true,
             type: Boolean,
             required: false
         },
