@@ -1,6 +1,9 @@
 <?php
 namespace paulmillband\cachedImageResizer\App\Models\Crop;
 
+use paulmillband\cachedImageResizer\App\Models\Resize\ImageResizer;
+use paulmillband\cachedImageResizer\App\Models\Resize\Resize;
+
 class ImageCropper
 {
     /**
@@ -23,6 +26,14 @@ class ImageCropper
         int $width=0,
         int $height=0
     ) {
+        if($width == 0 || $height == 0){
+            return ImageResizer::resizeIfNeeded(
+                $imageFilePath,
+                $newPath,
+                $width,
+                $height,
+            );
+        }
         $newFileDirname = dirname($newPath);
         if(!is_dir($newFileDirname)){
             mkdir($newFileDirname, 0775, true);

@@ -32,17 +32,22 @@ class Crop
         float $blur=1,
         bool $bestFit=false
     ) {
+        if($width == 0 || $height == 0){
+            return Resize::resize(
+                $imageFilePath,
+                $resizedFilePath,
+                $width,
+                $height,
+                $filterType,
+                $blur,
+                $bestFit
+            );
+        }
         $file = realpath($imageFilePath);
         if($file===false){
             return false;
         }
         $imagick = new Imagick($file);
-        if($width == 0){
-            $width = $imagick->getImageWidth();
-        }
-        if($height == 0){
-            $height = $imagick->getImageHeight();
-        }
         $resizeDimensions = self::getDimensionsToCreateResizeImageBeforeItsCropped($imagick, $width, $height);
         if($xCoordinate==-1){
             $xCoordinate=self::getCoordinateForCentredImage($resizeDimensions['w'], $width);
