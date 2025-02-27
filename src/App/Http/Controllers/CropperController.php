@@ -20,6 +20,8 @@ class CropperController extends Controller
      * @param int $width
      * @param int $height
      * @param string $imgPath
+     * @param int $xCoordinate
+     * @param int $yCoordinate
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ImagickException
      */
@@ -27,15 +29,17 @@ class CropperController extends Controller
         Request $request,
         int $width,
         int $height,
-        string $imgPath
+        string $imgPath,
+        int $xCoordinate=-1,
+        int $yCoordinate=-1
     ){
         $newPath = $this->resizeCacheClass->newFilePath($width, $height, $imgPath);
         ImageCropper::resizeAndCropIfNeeded(
             public_path('images/'.$imgPath),
             $newPath,
             '',
-            -1,
-            -1,
+            $xCoordinate,
+            $yCoordinate,
             $width,
             $height
         );

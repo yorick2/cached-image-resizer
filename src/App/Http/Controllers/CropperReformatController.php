@@ -21,6 +21,8 @@ class CropperReformatController extends Controller
      * @param string $extension
      * @param int $width
      * @param int $height
+     * @param int $xCoordinate
+     * @param int $yCoordinate
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \ImagickException
      */
@@ -28,7 +30,9 @@ class CropperReformatController extends Controller
         int $width,
         int $height,
         string $imgPath,
-        string $extension
+        string $extension,
+        int $xCoordinate=-1,
+        int $yCoordinate=-1
     ){
         $format = ImageFormats::getImageFormatFromExtension($extension);
         $newPath = $this->resizeCacheClass->newFilePath($imgPath, $format, $extension, $width, $height);
@@ -36,6 +40,8 @@ class CropperReformatController extends Controller
             public_path('images/'.$imgPath),
             $newPath,
             $format,
+            $xCoordinate,
+            $yCoordinate,
             $width,
             $height
         );
